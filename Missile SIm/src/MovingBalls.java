@@ -26,25 +26,6 @@ public class MovingBalls extends JFrame {
         inputPanel.setPreferredSize(new Dimension(width, 100));
         inputPanel.setBackground(Color.gray);
 
-        inputx1 = new JTextField(5);
-        inputy1 = new JTextField(5);
-        inputx2 = new JTextField(5);
-        inputy2 = new JTextField(5);
-        inputx3 = new JTextField(5);
-        inputy3 = new JTextField(5);
-
-        inputPanel.add(new JLabel("Point 1 x:"));
-        inputPanel.add(inputx1);
-        inputPanel.add(new JLabel("Point 1 y:"));
-        inputPanel.add(inputy1);
-        inputPanel.add(new JLabel("Point 2 x:"));
-        inputPanel.add(inputx2);
-        inputPanel.add(new JLabel("Point 2 y:"));
-        inputPanel.add(inputy2);
-        inputPanel.add(new JLabel("Point 3 x:"));
-        inputPanel.add(inputx3);
-        inputPanel.add(new JLabel("Point 3 y:"));
-        inputPanel.add(inputy3);
 
         this.add(inputPanel, BorderLayout.NORTH);
 
