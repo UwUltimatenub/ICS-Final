@@ -38,7 +38,6 @@ public class Ball extends JPanel {
             {x3 * x3, x3, 1}
         };
 
-        double[] results = {y1, y2, y3};
 
         double det = determinant(matrix);
 
@@ -88,15 +87,9 @@ public class Ball extends JPanel {
         moveParabolic();
     }
 
-    public void gameStart(JTextField inputx1, JTextField inputy1, JTextField inputx2, JTextField inputy2, JTextField inputx3, JTextField inputy3) {
-        int x1 = Integer.parseInt(inputx1.getText());
-        int y1 = Integer.parseInt(inputy1.getText());
-        int x2 = Integer.parseInt(inputx2.getText());
-        int y2 = Integer.parseInt(inputy2.getText());
-        int x3 = Integer.parseInt(inputx3.getText());
-        int y3 = Integer.parseInt(inputy3.getText());
+    
+    public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3) {
         calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
-
         // Start the ball at the very left side
         posx = radius;
         posy = (int) (a * posx * posx + b * posx + c);
