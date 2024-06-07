@@ -111,8 +111,8 @@ public class Ball extends JPanel {
         if (!running) {
             running = true;
             timer.start();
-            ArrayList<Point> points = ParabolicCalculator.calculateParabolaPoints(1, 2, 3, 4, 5, 6);
-System.out.println(points);
+            ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
+            System.out.println(CalculatedPoints);
 
         }
     }
