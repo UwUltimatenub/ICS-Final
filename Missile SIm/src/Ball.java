@@ -155,6 +155,10 @@ public class Ball extends JPanel {
         g.setColor(Color.BLACK);
         g.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
 
+        for (Point point : points) {
+            g.drawString( "(" + point.x + ", " + point.y + ")", point.x,  point.y+20 );
+        }
+
         // Draw the clicked points
         g.setColor(Color.RED);
         for (Point point : points) {

@@ -27,7 +27,7 @@ public class MovingBalls extends JFrame implements MouseListener {
 
         inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(3, 4, 5, 5));
-        inputPanel.setPreferredSize(new Dimension(width, 100));
+        inputPanel.setPreferredSize(new Dimension(width, 50));
         inputPanel.setBackground(Color.gray);
         inputPanel.add(errorMsg);
         this.add(inputPanel, BorderLayout.NORTH);
@@ -80,17 +80,17 @@ public class MovingBalls extends JFrame implements MouseListener {
         errorMsg.setVisible(true); // Ensure error message is visible
         if (clickPoints.size() < 3) {
             errorMsg.setText("Please select 3 points.");
-            inputPanel.revalidate();
+
             inputPanel.repaint();
             return false;
         }
-        if (ball.a>0){
+        if (ball.a<0){
             errorMsg.setText("Please select 3 points which form a downward facing parabola");
-            inputPanel.revalidate();
+
             inputPanel.repaint();
             return false;
         }
-        return true;
+        else {return true;}
     }
 
     @Override
