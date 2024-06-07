@@ -1,7 +1,9 @@
 import java.awt.*;
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * This is the ball class. This class includes the game loop as well as different movements for the ball as well as colour, and speed.
@@ -16,11 +18,14 @@ public class Ball extends JPanel {
     private boolean running = false;
     private Timer timer;
     private double a, b, c;
+    private ArrayList<Point> points; // To store clicked points
 
     public Ball(int pWidth, int pHeight) {
         this.pWidth = pWidth;
         this.pHeight = pHeight;
         setPreferredSize(new Dimension(pWidth, pHeight));
+
+        points = new ArrayList<>();
 
         timer = new Timer(10, new ActionListener() {
             @Override
@@ -31,13 +36,22 @@ public class Ball extends JPanel {
         });
     }
 
+    public void addPoint(Point point) {
+        points.add(point);
+        repaint();
+    }
+
+    public void clearPoints() {
+        points.clear();
+        repaint();
+    }
+
     private void calculateParabolaParameters(int x1, int y1, int x2, int y2, int x3, int y3) {
         double[][] matrix = {
             {x1 * x1, x1, 1},
             {x2 * x2, x2, 1},
             {x3 * x3, x3, 1}
         };
-
 
         double det = determinant(matrix);
 
@@ -87,10 +101,8 @@ public class Ball extends JPanel {
         moveParabolic();
     }
 
-    
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3) {
         calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
-        // Start the ball at the very left side
         posx = radius;
         posy = (int) (a * posx * posx + b * posx + c);
 
@@ -137,5 +149,11 @@ public class Ball extends JPanel {
         // Draw the coordinates of the ball
         g.setColor(Color.BLACK);
         g.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
+
+        // Draw the clicked points
+        g.setColor(Color.BLUE);
+        for (Point point : points) {
+            g.fillOval(point.x - radius / 2, point.y - radius / 2, radius, radius);
+        }
     }
 }
