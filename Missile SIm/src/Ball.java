@@ -21,6 +21,7 @@ public class Ball extends JPanel {
     private ArrayList<Point> points; // To store clicked points
 
     public Ball(int pWidth, int pHeight) {
+        
         this.pWidth = pWidth;
         this.pHeight = pHeight;
         setPreferredSize(new Dimension(pWidth, pHeight));
@@ -105,10 +106,14 @@ public class Ball extends JPanel {
         calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
         posx = radius;
         posy = (int) (a * posx * posx + b * posx + c);
+        
 
         if (!running) {
             running = true;
             timer.start();
+            ArrayList<Point> points = ParabolicCalculator.calculateParabolaPoints(1, 2, 3, 4, 5, 6);
+System.out.println(points);
+
         }
     }
 
@@ -151,7 +156,7 @@ public class Ball extends JPanel {
         g.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
 
         // Draw the clicked points
-        g.setColor(Color.BLUE);
+        g.setColor(Color.RED);
         for (Point point : points) {
             g.fillOval(point.x - radius / 2, point.y - radius / 2, radius, radius);
         }
