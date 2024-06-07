@@ -8,7 +8,7 @@ public class MovingBalls extends JFrame implements MouseListener {
     JButton start, stop;
     private final int width = 1200;
     private final int height = 1200;
-    JLabel errorMsg = new JLabel("Invalid input");
+    JLabel errorMsg = new JLabel("Nothing to See here!");
     Ball ball;
     ArrayList<Point> clickPoints;
     
@@ -29,6 +29,7 @@ public class MovingBalls extends JFrame implements MouseListener {
         inputPanel.setLayout(new GridLayout(3, 4, 5, 5));
         inputPanel.setPreferredSize(new Dimension(width, 100));
         inputPanel.setBackground(Color.gray);
+        inputPanel.add(errorMsg);
         this.add(inputPanel, BorderLayout.NORTH);
 
         buttonPanel = new JPanel();
@@ -61,6 +62,8 @@ public class MovingBalls extends JFrame implements MouseListener {
                     ball.gameStart(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
                 } else {
                     errorMsg.setVisible(true);
+                    inputPanel.revalidate();
+                    inputPanel.repaint();
                 }
             }
         });
@@ -74,8 +77,17 @@ public class MovingBalls extends JFrame implements MouseListener {
     }
 
     private boolean validateInputs() {
+        errorMsg.setVisible(true); // Ensure error message is visible
         if (clickPoints.size() < 3) {
             errorMsg.setText("Please select 3 points.");
+            inputPanel.revalidate();
+            inputPanel.repaint();
+            return false;
+        }
+        if (ball.a>0){
+            errorMsg.setText("Please select 3 points which form a downward facing parabola");
+            inputPanel.revalidate();
+            inputPanel.repaint();
             return false;
         }
         return true;
@@ -102,6 +114,7 @@ public class MovingBalls extends JFrame implements MouseListener {
                 for (Point p : clickPoints) {
                     ball.addPoint(p);
                 }
+                System.out.println("Total Points: " + clickPoints.size()); // Debug statement
                 System.out.println("Point removed"); // Debug statement
                 panel.repaint();
             } else {

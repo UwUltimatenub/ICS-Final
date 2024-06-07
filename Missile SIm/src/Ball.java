@@ -17,7 +17,7 @@ public class Ball extends JPanel {
     private int dx = 2;
     private boolean running = false;
     private Timer timer;
-    private double a, b, c;
+    public double a, b, c;
     private ArrayList<Point> points; // To store clicked points
 
     public Ball(int pWidth, int pHeight) {
