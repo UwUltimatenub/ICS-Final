@@ -49,7 +49,7 @@ public class ParabolicCalculator {
         int z = 0;
 
         for (int x = 0; x < GRID_SIZE; x++) {
-            int y = (int)(-a * x * x + b * x + c); // Flip the parabola by negating 'a'
+            int y = (int)(a * x * x + b * x + c); 
             if (y >= 0 && y <= GRID_SIZE) {
                 CalculatedPoints.add(new CalculatedPoints(x, y,z));
                 z+=10;
