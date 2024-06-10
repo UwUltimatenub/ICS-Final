@@ -2,21 +2,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
-public class CircleDrawer implements Runnable {
-    private Point start;
-    private Point end;
-    private long durationInMilliseconds;
-    private JPanel panel;
-
-    public CircleDrawer(Point start, Point end, long durationInMilliseconds, JPanel panel) {
-        this.start = start;
-        this.end = end;
-        this.durationInMilliseconds = durationInMilliseconds;
-        this.panel = panel;
-    }
-
-    @Override
-    public void run() {
+public class CircleDrawer {
+    public void drawCircleWithBezier(Point start, Point end, long durationInMilliseconds, JPanel panel) {
         // Calculate control points for Bezier curve
         Point control1 = new Point(start.x + (end.x - start.x) / 3, start.y);
         Point control2 = new Point(start.x + 2 * (end.x - start.x) / 3, end.y);
