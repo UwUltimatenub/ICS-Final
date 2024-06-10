@@ -147,14 +147,11 @@ public class Ball extends JPanel {
             timer.start();
             ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
             CalculatedPoints lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
-            System.out.println(lowestYPoint);
-            
-            Point start = new Point(100, 100);
-            Point end = new Point(400, 400);
-            int numPoints = 100; // Adjust this value as needed
-            // Create an instance of CircleDrawer
-            CircleDrawer circleDrawer = new CircleDrawer();
-            // Call the method to calculate circle positions
+
+            BezierCircleCalculator circleCalculator = new BezierCircleCalculator();
+            ArrayList<Point> circlePositions = circleCalculator.calculateCirclePositions(new Point(600, 1200),new Point(lowestYPoint.getX(), lowestYPoint.getY()), lowestYPoint.getZ());
+            System.out.println(circlePositions);
+
         }
     }
 

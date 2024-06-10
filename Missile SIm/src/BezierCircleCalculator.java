@@ -3,7 +3,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
-public class CircleDrawer {
+public class BezierCircleCalculator {
     public ArrayList<Point> calculateCirclePositions(Point start, Point end, int numPoints) {
         // Calculate control points for Bezier curve
         Point control1 = new Point(start.x + (end.x - start.x) / 3, start.y);
