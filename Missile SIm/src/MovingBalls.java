@@ -11,10 +11,12 @@ public class MovingBalls extends JFrame implements MouseListener {
     JLabel errorMsg = new JLabel("Nothing to See here!");
     Ball ball;
     ArrayList<Point> clickPoints;
+
     
     public MovingBalls() {
         clickPoints = new ArrayList<>();
         errorMsg.setForeground(Color.RED);
+        errorMsg.setVisible(false); 
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(width, height);
@@ -141,7 +143,7 @@ public class MovingBalls extends JFrame implements MouseListener {
     public void mouseEntered(MouseEvent e) {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
-
+    
     @Override
     public void mouseExited(MouseEvent e) {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

@@ -4,7 +4,7 @@ public class ParabolicCalculator {
     private static final int GRID_SIZE = 1200;
 
     public static ArrayList<CalculatedPoints> calculateParabolaPoints(int x1, int y1, int x2, int y2, int x3, int y3) {
-        ArrayList<Point> points = new ArrayList<>();
+
 
         Point p1 = new Point(x1, y1);
         Point p2 = new Point(x2, y2);
@@ -51,7 +51,7 @@ public class ParabolicCalculator {
         for (int x = 0; x < GRID_SIZE; x++) {
             int y = (int)(a * x * x + b * x + c); 
             if (y >= 0 && y <= GRID_SIZE) {
-                CalculatedPoints.add(new CalculatedPoints(x, y,z));
+                CalculatedPoints.add(new CalculatedPoints(x, y,z/10));
                 z+=10;
             }
         }

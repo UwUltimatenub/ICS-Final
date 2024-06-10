@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -8,9 +9,12 @@ import java.util.ArrayList;
 /**
  * This is the ball class. This class includes the game loop as well as different movements for the ball as well as colour, and speed.
  */
+
 public class Ball extends JPanel {
     private int pHeight;
     private int pWidth;
+    private final int rocketWidth = 75;
+    private final int rocketHeight = 100;
     private final int radius = 15;
     private int posx;
     private int posy;
@@ -19,9 +23,11 @@ public class Ball extends JPanel {
     private Timer timer;
     public double a, b, c;
     private ArrayList<Point> points; // To store clicked points
+    private Image rocket;
+    
 
     public Ball(int pWidth, int pHeight) {
-        
+        rocket = new ImageIcon(getClass().getResource("/rocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
         this.pWidth = pWidth;
         this.pHeight = pHeight;
         setPreferredSize(new Dimension(pWidth, pHeight));
@@ -93,7 +99,7 @@ public class Ball extends JPanel {
         posx += dx;
         posy = (int) (a * posx * posx + b * posx + c);
 
-        if (posx > pWidth - 2 * radius || posx < radius) {
+        if (posx > pWidth - 2 * rocketWidth/2 || posx < rocketWidth/2) {
             dx = -dx;
         }
     }
@@ -104,7 +110,7 @@ public class Ball extends JPanel {
 
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3) {
         calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
-        posx = radius;
+        posx = rocketWidth/2;
         posy = (int) (a * posx * posx + b * posx + c);
         
 
@@ -134,35 +140,47 @@ public class Ball extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        // Draw the grid
-        g.setColor(Color.LIGHT_GRAY);
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setColor(Color.LIGHT_GRAY);
         int gridSize = 50;
         for (int i = 0; i < pWidth; i += gridSize) {
-            g.drawLine(i, 0, i, pHeight);
-            g.drawString(Integer.toString(i), i, 10);
+            g2d.drawLine(i, 0, i, pHeight);
+            g2d.drawString(Integer.toString(i), i, 10);
         }
         for (int i = 0; i < pHeight; i += gridSize) {
-            g.drawLine(0, i, pWidth, i);
-            g.drawString(Integer.toString(i), 0, i + 10);
+            g2d.drawLine(0, i, pWidth, i);
+            g2d.drawString(Integer.toString(i), 0, i + 10);
         }
+        double slope = 2 * a * posx + b;
+    // Calculate the angle in radians
+        double angle = Math.atan(slope);
+    
+        // Set up rotation
 
-        // Draw the ball
-        g.setColor(Color.RED);
-        g.fillOval(posx - radius, posy - radius, radius * 2, radius * 2);
-
+        AffineTransform oldTransform = g2d.getTransform();
+        g2d.rotate(angle+90, posx, posy);
+    
+        // Draw the rocket (rotated)
+        g2d.drawImage(rocket, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
+    
+        // Reset transformation
+        g2d.setTransform(oldTransform);
+    
         // Draw the coordinates of the ball
-        g.setColor(Color.BLACK);
-        g.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
-
+        g2d.setColor(Color.BLACK);
+        g2d.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
+    
         for (Point point : points) {
-            g.drawString( "(" + point.x + ", " + point.y + ")", point.x,  point.y+20 );
+            g2d.drawString("(" + point.x + ", " + point.y + ")", point.x, point.y + 20);
         }
-
+    
         // Draw the clicked points
-        g.setColor(Color.RED);
+        g2d.setColor(Color.RED);
         for (Point point : points) {
-            g.fillOval(point.x - radius / 2, point.y - radius / 2, radius, radius);
+            g2d.fillOval(point.x - radius / 2, point.y - radius / 2, radius, radius);
         }
+    
+        // Dispose the graphics context to release resources
+        g2d.dispose();
     }
 }
