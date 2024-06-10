@@ -9,12 +9,16 @@ public class MovingBalls extends JFrame implements MouseListener {
     private final int width = 1200;
     private final int height = 1200;
     JLabel errorMsg = new JLabel("Nothing to See here!");
-    Ball ball;
-    ArrayList<Point> clickPoints;
-
-
+    Ball ball, interception;
+    ArrayList<Point> clickPoints, leStopArrayList;
+    private final int rocketWidth = 75;
+    private final int rocketHeight = 150;
+    Image rocket, interceptionImage;
+     
     
     public MovingBalls() {
+        
+       
         clickPoints = new ArrayList<>();
         errorMsg.setForeground(Color.RED);
         errorMsg.setVisible(false); 
@@ -50,7 +54,9 @@ public class MovingBalls extends JFrame implements MouseListener {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        ball = new Ball(width, height - 150);
+        ball = new Ball(width, height - 150, "Parabolic",rocket);
+        
+        
         panel.add(ball);
         this.revalidate();
 

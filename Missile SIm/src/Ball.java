@@ -23,14 +23,23 @@ public class Ball extends JPanel {
     private Timer timer;
     public double a, b, c;
     private ArrayList<Point> points; // To store clicked points
-    private Image rocket;
     boolean draw=false;
+    String motion;
+
+    Image rocket, interceptionImage;
     
 
-    public Ball(int pWidth, int pHeight) {
+    public Ball(int pWidth, int pHeight, String motion, Image img) {
+        try{ 
+            rocket = new ImageIcon(getClass().getResource("LeRocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
+            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/6, rocketHeight, Image.SCALE_SMOOTH);
+        }catch(Exception e) {
+            System.err.println("Error loading rocket images: ");
+            e.printStackTrace();
+        }
 
-        rocket = new ImageIcon(getClass().getResource("LeRocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
         this.pWidth = pWidth;
+        this.motion = motion;
         this.pHeight = pHeight;
         setPreferredSize(new Dimension(pWidth, pHeight));
 
@@ -105,9 +114,25 @@ public class Ball extends JPanel {
             dx = -dx;
         }
     }
+    private void moveLinear() {
+        posx += dx;
+        posy = (int) (posx + c);
+
+        if (posx > pWidth - 2 * rocketWidth/2 || posx < rocketWidth/2) {
+            dx = -dx;
+        }
+    }
 
     private void update() {
-        moveParabolic();
+        switch (motion) {
+            case "Linear":
+                moveLinear();
+                break;
+                
+            case "Parabolic":
+                moveParabolic();
+                break;
+        }
     }
 
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw) {
@@ -142,6 +167,7 @@ public class Ball extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setColor(Color.LIGHT_GRAY);
@@ -166,6 +192,8 @@ public class Ball extends JPanel {
 
     if (draw){
         g2d.drawImage(rocket, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
+        g2d.drawImage(interceptionImage, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
+
     }
         // Draw the rocket (rotated)
         
