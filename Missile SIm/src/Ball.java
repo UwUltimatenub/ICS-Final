@@ -11,13 +11,12 @@ import java.util.ArrayList;
  */
 
 public class Ball extends JPanel {
-    private int pHeight;
-    private int pWidth;
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     private final int radius = 15;
-    private int posx;
-    private int posy;
+    private int pWidth, pHeight, posx,  posy, missileX, missileY;
+    CalculatedPoints lowestYPoint;
+
     private int dx = 2;
     private boolean running = false;
     private Timer timer;
@@ -41,6 +40,7 @@ public class Ball extends JPanel {
         this.pWidth = pWidth;
         this.motion = motion;
         this.pHeight = pHeight;
+        missileY=pHeight;
         setPreferredSize(new Dimension(pWidth, pHeight));
 
         points = new ArrayList<>();
@@ -115,42 +115,30 @@ public class Ball extends JPanel {
         }
     }
     private void moveLinear() {
-        posx += dx;
-        posy = (int) (posx + c);
-
-        if (posx > pWidth - 2 * rocketWidth/2 || posx < rocketWidth/2) {
-            dx = -dx;
-        }
+        missileX = lowestYPoint.getX();;
+        missileY -=dx;
     }
 
     private void update() {
-        switch (motion) {
-            case "Linear":
-                moveLinear();
-                break;
-                
-            case "Parabolic":
-                moveParabolic();
-                break;
-        }
+        moveParabolic();
+        moveLinear();
     }
 
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw, JPanel panel) {
         calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
         posx = rocketWidth/2;
         posy = (int) (a * posx * posx + b * posx + c);
-        this.draw=draw;
-        
+        this.draw = draw;
+        ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
+        lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
+            
 
         if (!running) {
             running = true;
             timer.start();
-            ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
-            CalculatedPoints lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
 
-            BezierCircleCalculator circleCalculator = new BezierCircleCalculator();
-            ArrayList<Point> circlePositions = circleCalculator.calculateCirclePositions(new Point(600, 1200),new Point(lowestYPoint.getX(), lowestYPoint.getY()), lowestYPoint.getZ());
-            System.out.println(circlePositions);
+            // Call the drawCircleWithBezier method
+            //drawer.drawCircleWithBezier(start, end, 1000, panel);
 
         }
     }
@@ -196,7 +184,8 @@ public class Ball extends JPanel {
 
     if (draw){
         g2d.drawImage(rocket, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
-        g2d.drawImage(interceptionImage, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
+        g2d.rotate(-angle-Math.toRadians(90), posx, posy);
+        g2d.drawImage(interceptionImage, missileX - rocketWidth / 2, missileY - rocketHeight / 2, null);
 
     }
         // Draw the rocket (rotated)
