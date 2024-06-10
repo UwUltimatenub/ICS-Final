@@ -12,6 +12,7 @@ public class MovingBalls extends JFrame implements MouseListener {
     Ball ball;
     ArrayList<Point> clickPoints;
 
+
     
     public MovingBalls() {
         clickPoints = new ArrayList<>();
@@ -61,7 +62,7 @@ public class MovingBalls extends JFrame implements MouseListener {
                     Point p1 = clickPoints.get(0);
                     Point p2 = clickPoints.get(1);
                     Point p3 = clickPoints.get(2);
-                    ball.gameStart(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+                    ball.gameStart(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, true);
                 } else {
                     errorMsg.setVisible(true);
                     inputPanel.revalidate();

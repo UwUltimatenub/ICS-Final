@@ -14,7 +14,7 @@ public class Ball extends JPanel {
     private int pHeight;
     private int pWidth;
     private final int rocketWidth = 75;
-    private final int rocketHeight = 100;
+    private final int rocketHeight = 150;
     private final int radius = 15;
     private int posx;
     private int posy;
@@ -24,10 +24,12 @@ public class Ball extends JPanel {
     public double a, b, c;
     private ArrayList<Point> points; // To store clicked points
     private Image rocket;
+    boolean draw=false;
     
 
     public Ball(int pWidth, int pHeight) {
-        rocket = new ImageIcon(getClass().getResource("/rocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
+
+        rocket = new ImageIcon(getClass().getResource("LeRocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
         this.pWidth = pWidth;
         this.pHeight = pHeight;
         setPreferredSize(new Dimension(pWidth, pHeight));
@@ -108,10 +110,11 @@ public class Ball extends JPanel {
         moveParabolic();
     }
 
-    public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3) {
+    public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw) {
         calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
         posx = rocketWidth/2;
         posy = (int) (a * posx * posx + b * posx + c);
+        this.draw=draw;
         
 
         if (!running) {
@@ -158,10 +161,14 @@ public class Ball extends JPanel {
         // Set up rotation
 
         AffineTransform oldTransform = g2d.getTransform();
-        g2d.rotate(angle+90, posx, posy);
-    
-        // Draw the rocket (rotated)
+        g2d.rotate(angle+Math.toRadians(90), posx, posy);
+
+
+    if (draw){
         g2d.drawImage(rocket, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
+    }
+        // Draw the rocket (rotated)
+        
     
         // Reset transformation
         g2d.setTransform(oldTransform);
