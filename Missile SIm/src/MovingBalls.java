@@ -14,14 +14,11 @@ public class MovingBalls extends JFrame implements MouseListener {
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     Image rocket, interceptionImage;
-     
-    
+
     public MovingBalls() {
-        
-       
         clickPoints = new ArrayList<>();
         errorMsg.setForeground(Color.RED);
-        errorMsg.setVisible(false); 
+        errorMsg.setVisible(false);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(width, height);
@@ -54,9 +51,8 @@ public class MovingBalls extends JFrame implements MouseListener {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        ball = new Ball(width, height - 150, "Parabolic",rocket);
-        
-        
+        ball = new Ball(width, height - 150, "Parabolic", rocket);
+
         panel.add(ball);
         this.revalidate();
 
@@ -68,7 +64,8 @@ public class MovingBalls extends JFrame implements MouseListener {
                     Point p1 = clickPoints.get(0);
                     Point p2 = clickPoints.get(1);
                     Point p3 = clickPoints.get(2);
-                    ball.gameStart(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, true);
+                    ball.gameStart(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, true, panel);
+                    
                 } else {
                     errorMsg.setVisible(true);
                     inputPanel.revalidate();
@@ -93,13 +90,14 @@ public class MovingBalls extends JFrame implements MouseListener {
             inputPanel.repaint();
             return false;
         }
-        if (ball.a<0){
+        if (ball.a < 0) {
             errorMsg.setText("Please select 3 points which form a downward facing parabola");
 
             inputPanel.repaint();
             return false;
+        } else {
+            return true;
         }
-        else {return true;}
     }
 
     @Override
@@ -150,7 +148,7 @@ public class MovingBalls extends JFrame implements MouseListener {
     public void mouseEntered(MouseEvent e) {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
-    
+
     @Override
     public void mouseExited(MouseEvent e) {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

@@ -135,21 +135,30 @@ public class Ball extends JPanel {
         }
     }
 
-    public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw) {
-        calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
-        posx = rocketWidth/2;
-        posy = (int) (a * posx * posx + b * posx + c);
-        this.draw=draw;
-        
+    // Inside Ball class
 
-        if (!running) {
-            running = true;
-            timer.start();
-            ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
-            System.out.println(CalculatedPoints);
+public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw, JPanel panel) {
+    calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
+    posx = rocketWidth/2;
+    posy = (int) (a * posx * posx + b * posx + c);
+    this.draw=draw;
 
-        }
+    if (!running) {
+        running = true;
+        timer.start();
+
+        // Start Bezier curve animation concurrently
+        ArrayList<CalculatedPoints> calculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
+        Point start = new Point(100, 100);
+        Point end = new Point(300, 300);
+        long durationInMilliseconds = 3000; // 3 seconds
+
+        CircleDrawer circleDrawer = new CircleDrawer(start, end, durationInMilliseconds, panel);
+        Thread thread = new Thread(circleDrawer);
+        thread.start();
     }
+}
+
 
     public void gameStop() {
         running = false;
