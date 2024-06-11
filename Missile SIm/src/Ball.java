@@ -11,15 +11,13 @@ import java.util.ArrayList;
  */
 
 public class Ball extends JPanel {
-    int currentIndex = 0;
-    int currentIndex2 = 0;
-    private int pHeight;
-    private int pWidth;
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     private final int radius = 15;
-    private int posx;
-    private int posy;
+    private int pWidth, pHeight, posx,  posy, missileX, missileY;
+    CalculatedPoints lowestYPoint;
+    private static final int TIMER_DELAY = 10;
+
     private int dx = 2;
     private boolean running = false;
     private Timer timer;
@@ -45,6 +43,7 @@ public class Ball extends JPanel {
         this.pWidth = pWidth;
         this.motion = motion;
         this.pHeight = pHeight;
+        
         setPreferredSize(new Dimension(pWidth, pHeight));
 
         points = new ArrayList<>();
@@ -119,24 +118,22 @@ public class Ball extends JPanel {
         }
     }
     private void moveLinear() {
-        posx += dx;
-        posy = (int) (posx + c);
+        // Calculate the distance between the missile and the rocket
+        double distance = Math.sqrt(Math.pow((int)lowestYPoint.getX() - missileX, 2) + Math.pow(lowestYPoint.getY() - missileY, 2));
+        double missileSpeed = distance / (TIMER_DELAY / 1000.0); // Pixels per second
+        
+        // Normalize the direction vector
+        double directionX = (lowestYPoint.getX() - missileX) / distance;
+        double directionY = (lowestYPoint.getY() - missileY) / distance;
 
-        if (posx > pWidth - 2 * rocketWidth/2 || posx < rocketWidth/2) {
-            dx = -dx;
-        }
+        // Update missile position
+        missileX += directionX * missileSpeed * (1/ 1000.0);
+        missileY += directionY * missileSpeed * (1/ 1000.0);
     }
 
     private void update() {
-        switch (motion) {
-            case "Linear":
-                moveLinear();
-                break;
-                
-            case "Parabolic":
-                moveParabolic();
-                break;
-        }
+        moveParabolic();
+        moveLinear();
     }
 
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw, JPanel panel) {
