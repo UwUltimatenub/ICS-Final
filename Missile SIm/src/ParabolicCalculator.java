@@ -52,7 +52,7 @@ public class ParabolicCalculator {
             int y = (int)(a * x * x + b * x + c); 
             if (y >= 0 && y <= GRID_SIZE) {
                 CalculatedPoints.add(new CalculatedPoints(x, y,z));
-                z+=1;
+                z+=7;
             }
         }
 
