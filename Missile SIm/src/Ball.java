@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class Ball extends JPanel {
     int currentIndex = 0;
+    int currentIndex2 = 0;
     private int pHeight;
     private int pWidth;
     private final int rocketWidth = 75;
@@ -24,6 +25,7 @@ public class Ball extends JPanel {
     private Timer timer;
     public double a, b, c;
     private ArrayList<Point> points; // To store clicked points
+    private ArrayList<CalculatedPoints> CalculatedPoints;
     ArrayList<Point> circlePositions;
     boolean draw=false;
     String motion;
@@ -139,22 +141,34 @@ public class Ball extends JPanel {
 
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw, JPanel panel) {
         calculateParabolaParameters(x1, y1, x2, y2, x3, y3);
-        posx = rocketWidth/2;
+        posx = rocketWidth / 2;
         posy = (int) (a * posx * posx + b * posx + c);
-        this.draw=draw;
-        
-
+        this.draw = draw;
+    
         if (!running) {
             running = true;
             timer.start();
-            ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
-            CalculatedPoints lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
-        
-            BezierCircleCalculator circleCalculator = new BezierCircleCalculator();
-            this.circlePositions = circleCalculator.calculateCirclePositions(new Point(600, 1200),new Point(lowestYPoint.getX(), lowestYPoint.getY()), lowestYPoint.getZ());
-            System.out.println(this.circlePositions);
+            this.CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
+            if (this.CalculatedPoints == null || this.CalculatedPoints.isEmpty()) {
+                System.err.println("CalculatedPoints is null or empty after calculation!");
+                return; // Or handle this situation appropriately
+            }
+            CalculatedPoints RandomPos = (CalculatedPoints) RandomPoint.findRandomPos(this.CalculatedPoints);
+            if (RandomPos == null) {
+                System.err.println("lowestYPoint is null!");
+                return; // Or handle this situation appropriately
+            }
+            
+            ExponentialCurveCalculator circleCalculator = new ExponentialCurveCalculator(new Point(600, 900), new Point(RandomPos.getX(), RandomPos.getY()), RandomPos.getZ());
+            this.circlePositions = circleCalculator.generateCurve();
+            if (this.circlePositions == null) {
+                System.err.println("circlePositions is null!");
+                return; // Or handle this situation appropriately
+            }
+            System.out.println(circlePositions.size());
+            System.out.println(CalculatedPoints.size());
+            System.out.println(RandomPos);
         }
-        
     }
 
     public void gameStop() {
@@ -172,59 +186,52 @@ public class Ball extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g.create();
-        g2d.setColor(Color.LIGHT_GRAY);
-        int gridSize = 50;
-        for (int i = 0; i < pWidth; i += gridSize) {
-            g2d.drawLine(i, 0, i, pHeight);
-            g2d.drawString(Integer.toString(i), i, 10);
-        }
-        for (int i = 0; i < pHeight; i += gridSize) {
-            g2d.drawLine(0, i, pWidth, i);
-            g2d.drawString(Integer.toString(i), 0, i + 10);
-        }
-        double slope = 2 * a * posx + b;
-    // Calculate the angle in radians
-        double angle = Math.atan(slope);
-    
-        // Set up rotation
-
-        AffineTransform oldTransform = g2d.getTransform();
-        g2d.rotate(angle+Math.toRadians(90), posx, posy);
-
-
-    if (draw){
-        g2d.drawImage(rocket, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
-        g2d.drawImage(interceptionImage, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
-        if (currentIndex < circlePositions.size()) {
-            Point circlePosition = circlePositions.get(currentIndex);
-            g2d.setColor(Color.RED);
-            g2d.fillOval(circlePosition.x - radius / 2, circlePosition.y - radius / 2, radius, radius);
-            currentIndex++; // Move to the next point
-        }
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    Graphics2D g2d = (Graphics2D) g.create();
+    g2d.setColor(Color.LIGHT_GRAY);
+    int gridSize = 50;
+    for (int i = 0; i < pWidth; i += gridSize) {
+        g2d.drawLine(i, 0, i, pHeight);
+        g2d.drawString(Integer.toString(i), i, 10);
     }
-        
-        // Reset transformation
-        g2d.setTransform(oldTransform);
-    
-        // Draw the coordinates of the ball
-        g2d.setColor(Color.BLACK);
-        g2d.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
-    
-        for (Point point : points) {
-            g2d.drawString("(" + point.x + ", " + point.y + ")", point.x, point.y + 20);
-        }
-    
-        // Draw the clicked points
+    for (int i = 0; i < pHeight; i += gridSize) {
+        g2d.drawLine(0, i, pWidth, i);
+        g2d.drawString(Integer.toString(i), 0, i + 10);
+    }
+    double slope = 2 * a * posx + b;
+    double angle = Math.atan(slope);
+
+    AffineTransform oldTransform = g2d.getTransform();
+    g2d.rotate(angle + Math.toRadians(90), posx, posy);
+
+
+    if (circlePositions != null && currentIndex < circlePositions.size()) {
+        Point circlePosition = circlePositions.get(currentIndex);
         g2d.setColor(Color.RED);
-        for (Point point : points) {
-            g2d.fillOval(point.x - radius / 2, point.y - radius / 2, radius, radius);
-        }
-    
-        // Dispose the graphics context to release resources
-        g2d.dispose();
+        g2d.fillOval(circlePosition.x - radius / 2, circlePosition.y - radius / 2, radius, radius);
+        currentIndex++; // Move to the next point
+        //System.out.print(circlePosition + ", ");
     }
+
+    g2d.setTransform(oldTransform);
+
+    g2d.setColor(Color.BLACK);
+    g2d.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
+
+    if (CalculatedPoints != null && currentIndex2 < CalculatedPoints.size()) {
+        CalculatedPoints newposition = CalculatedPoints.get(currentIndex2);
+        Point pointPos = new Point(newposition.getX(), newposition.getY());
+        g2d.setColor(Color.RED);
+        g2d.fillOval(pointPos.x - radius / 2, pointPos.y - radius / 2, radius, radius);
+        currentIndex2++; // Move to the next point
+        //System.out.print(pointPos + ", ");
+    }
+    g2d.setColor(Color.RED);
+    for (Point point : points) {
+        g2d.fillOval(point.x - radius / 2, point.y - radius / 2, radius, radius);
+    }
+
+    g2d.dispose();
+}
 }
