@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 
 public class BezierCircleCalculator {
     public ArrayList<Point> calculateCirclePositions(Point start, Point end, int numPoints) {
+        numPoints = numPoints/10;
         // Calculate control points for Bezier curve
         Point control1 = new Point(start.x + (end.x - start.x) / 3, start.y);
         Point control2 = new Point(start.x + 2 * (end.x - start.x) / 3, end.y);

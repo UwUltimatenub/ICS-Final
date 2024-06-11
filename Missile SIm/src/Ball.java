@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 
 public class Ball extends JPanel {
+    int currentIndex = 0;
     private int pHeight;
     private int pWidth;
     private final int rocketWidth = 75;
@@ -23,6 +24,7 @@ public class Ball extends JPanel {
     private Timer timer;
     public double a, b, c;
     private ArrayList<Point> points; // To store clicked points
+    ArrayList<Point> circlePositions;
     boolean draw=false;
     String motion;
 
@@ -147,12 +149,12 @@ public class Ball extends JPanel {
             timer.start();
             ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
             CalculatedPoints lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
-
+        
             BezierCircleCalculator circleCalculator = new BezierCircleCalculator();
-            ArrayList<Point> circlePositions = circleCalculator.calculateCirclePositions(new Point(600, 1200),new Point(lowestYPoint.getX(), lowestYPoint.getY()), lowestYPoint.getZ());
-            System.out.println(circlePositions);
-
+            this.circlePositions = circleCalculator.calculateCirclePositions(new Point(600, 1200),new Point(lowestYPoint.getX(), lowestYPoint.getY()), lowestYPoint.getZ());
+            System.out.println(this.circlePositions);
         }
+        
     }
 
     public void gameStop() {
@@ -197,11 +199,14 @@ public class Ball extends JPanel {
     if (draw){
         g2d.drawImage(rocket, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
         g2d.drawImage(interceptionImage, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
-
+        if (currentIndex < circlePositions.size()) {
+            Point circlePosition = circlePositions.get(currentIndex);
+            g2d.setColor(Color.RED);
+            g2d.fillOval(circlePosition.x - radius / 2, circlePosition.y - radius / 2, radius, radius);
+            currentIndex++; // Move to the next point
+        }
     }
-        // Draw the rocket (rotated)
         
-    
         // Reset transformation
         g2d.setTransform(oldTransform);
     
