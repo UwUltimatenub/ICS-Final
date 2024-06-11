@@ -16,9 +16,9 @@ public class Ball extends JPanel {
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     private final int radius = 15;
-    private int pWidth, pHeight, posx,  posy, missileX, missileY;
+    private int pWidth, pHeight, posx,  posy;
     CalculatedPoints lowestYPoint;
-    private static final int TIMER_DELAY = 10;
+
     
     private int dx = 2;
     private boolean running = false;
@@ -36,7 +36,7 @@ public class Ball extends JPanel {
     public Ball(int pWidth, int pHeight, String motion, Image img) {
         try{ 
             rocket = new ImageIcon(getClass().getResource("LeRocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
-            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/6, rocketHeight, Image.SCALE_SMOOTH);
+            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/12, rocketHeight/2, Image.SCALE_SMOOTH);
         }catch(Exception e) {
             System.err.println("Error loading rocket images: ");
             e.printStackTrace();
@@ -188,9 +188,9 @@ protected void paintComponent(Graphics g) {
     double angle = Math.atan(slope);
 
     AffineTransform oldTransform = g2d.getTransform();
-    g2d.rotate(angle + Math.toRadians(90), posx, posy);
+    
 
-    g2d.setTransform(oldTransform);
+    
 
     g2d.setColor(Color.BLACK);
     g2d.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
@@ -199,14 +199,18 @@ protected void paintComponent(Graphics g) {
         CalculatedPoints newposition = CalculatedPoints.get(currentIndex2);
         Point pointPos = new Point(newposition.getX(), newposition.getY());
         g2d.setColor(Color.RED);
-        g2d.fillOval(pointPos.x, pointPos.y, radius, radius);
+
+        g2d.rotate(angle+Math.toRadians(105), newposition.getX(), newposition.getY());
+        g2d.drawImage(rocket, newposition.getX()-rocketWidth/2, newposition.getY()-rocketHeight/2, null);
+        g2d.setTransform(oldTransform);
         currentIndex2++; // Move to the next point
         //System.out.print(pointPos + ", ");
     }
     if (circlePositions != null && currentIndex < circlePositions.size()) {
         Point Postioning = circlePositions.get(currentIndex);
         g2d.setColor(Color.RED);
-        g2d.fillOval(Postioning.x, Postioning.y, radius, radius);
+        g2d.drawImage(interceptionImage, Postioning.x-rocketHeight/24, Postioning.y-rocketHeight/4, null);
+
         currentIndex++; // Move to the next point
         //System.out.print(circlePosition + ", ");
     }
