@@ -16,6 +16,7 @@ public class Ball extends JPanel {
     private final int radius = 15;
     private int pWidth, pHeight, posx,  posy, missileX, missileY;
     CalculatedPoints lowestYPoint;
+    private static final int TIMER_DELAY = 10;
 
     private int dx = 2;
     private boolean running = false;
@@ -40,7 +41,7 @@ public class Ball extends JPanel {
         this.pWidth = pWidth;
         this.motion = motion;
         this.pHeight = pHeight;
-        missileY=pHeight;
+        
         setPreferredSize(new Dimension(pWidth, pHeight));
 
         points = new ArrayList<>();
@@ -115,8 +116,17 @@ public class Ball extends JPanel {
         }
     }
     private void moveLinear() {
-        missileX = lowestYPoint.getX();;
-        missileY -=dx;
+        // Calculate the distance between the missile and the rocket
+        double distance = Math.sqrt(Math.pow((int)lowestYPoint.getX() - missileX, 2) + Math.pow(lowestYPoint.getY() - missileY, 2));
+        double missileSpeed = distance / (TIMER_DELAY / 1000.0); // Pixels per second
+        
+        // Normalize the direction vector
+        double directionX = (lowestYPoint.getX() - missileX) / distance;
+        double directionY = (lowestYPoint.getY() - missileY) / distance;
+
+        // Update missile position
+        missileX += directionX * missileSpeed * (1/ 1000.0);
+        missileY += directionY * missileSpeed * (1/ 1000.0);
     }
 
     private void update() {
@@ -131,6 +141,8 @@ public class Ball extends JPanel {
         this.draw = draw;
         ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
         lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
+        missileX=lowestYPoint.getX();
+        missileY=pHeight;
             
 
         if (!running) {
