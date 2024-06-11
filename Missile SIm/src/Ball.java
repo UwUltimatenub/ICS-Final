@@ -148,6 +148,8 @@ public class Ball extends JPanel {
         if (!running) {
             running = true;
             timer.start();
+            currentIndex = 0;
+            currentIndex2 = 0;
             this.CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
             if (this.CalculatedPoints == null || this.CalculatedPoints.isEmpty()) {
                 System.err.println("CalculatedPoints is null or empty after calculation!");
@@ -165,9 +167,7 @@ public class Ball extends JPanel {
                 System.err.println("circlePositions is null!");
                 return; // Or handle this situation appropriately
             }
-            System.out.println(circlePositions.size());
-            System.out.println(CalculatedPoints.size());
-            System.out.println(RandomPos);
+            
         }
     }
 
@@ -205,15 +205,6 @@ protected void paintComponent(Graphics g) {
     AffineTransform oldTransform = g2d.getTransform();
     g2d.rotate(angle + Math.toRadians(90), posx, posy);
 
-
-    if (circlePositions != null && currentIndex < circlePositions.size()) {
-        Point circlePosition = circlePositions.get(currentIndex);
-        g2d.setColor(Color.RED);
-        g2d.fillOval(circlePosition.x - radius / 2, circlePosition.y - radius / 2, radius, radius);
-        currentIndex++; // Move to the next point
-        //System.out.print(circlePosition + ", ");
-    }
-
     g2d.setTransform(oldTransform);
 
     g2d.setColor(Color.BLACK);
@@ -223,9 +214,16 @@ protected void paintComponent(Graphics g) {
         CalculatedPoints newposition = CalculatedPoints.get(currentIndex2);
         Point pointPos = new Point(newposition.getX(), newposition.getY());
         g2d.setColor(Color.RED);
-        g2d.fillOval(pointPos.x - radius / 2, pointPos.y - radius / 2, radius, radius);
+        g2d.fillOval(pointPos.x, pointPos.y, radius, radius);
         currentIndex2++; // Move to the next point
         //System.out.print(pointPos + ", ");
+    }
+    if (circlePositions != null && currentIndex < circlePositions.size()) {
+        Point Postioning = circlePositions.get(currentIndex);
+        g2d.setColor(Color.RED);
+        g2d.fillOval(Postioning.x, Postioning.y, radius, radius);
+        currentIndex++; // Move to the next point
+        //System.out.print(circlePosition + ", ");
     }
     g2d.setColor(Color.RED);
     for (Point point : points) {
