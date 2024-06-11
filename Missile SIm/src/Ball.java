@@ -11,13 +11,15 @@ import java.util.ArrayList;
  */
 
 public class Ball extends JPanel {
+    int currentIndex = 0;
+    int currentIndex2 = 0;
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     private final int radius = 15;
     private int pWidth, pHeight, posx,  posy, missileX, missileY;
     CalculatedPoints lowestYPoint;
     private static final int TIMER_DELAY = 10;
-
+    
     private int dx = 2;
     private boolean running = false;
     private Timer timer;
@@ -117,23 +119,9 @@ public class Ball extends JPanel {
             dx = -dx;
         }
     }
-    private void moveLinear() {
-        // Calculate the distance between the missile and the rocket
-        double distance = Math.sqrt(Math.pow((int)lowestYPoint.getX() - missileX, 2) + Math.pow(lowestYPoint.getY() - missileY, 2));
-        double missileSpeed = distance / (TIMER_DELAY / 1000.0); // Pixels per second
-        
-        // Normalize the direction vector
-        double directionX = (lowestYPoint.getX() - missileX) / distance;
-        double directionY = (lowestYPoint.getY() - missileY) / distance;
-
-        // Update missile position
-        missileX += directionX * missileSpeed * (1/ 1000.0);
-        missileY += directionY * missileSpeed * (1/ 1000.0);
-    }
 
     private void update() {
         moveParabolic();
-        moveLinear();
     }
 
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw, JPanel panel) {
@@ -158,7 +146,7 @@ public class Ball extends JPanel {
                 return; // Or handle this situation appropriately
             }
             
-            ExponentialCurveCalculator circleCalculator = new ExponentialCurveCalculator(new Point(600, 900), new Point(RandomPos.getX(), RandomPos.getY()), RandomPos.getZ());
+            ExponentialCurveCalculator circleCalculator = new ExponentialCurveCalculator(new Point(350, 5000), new Point(RandomPos.getX(), RandomPos.getY()), RandomPos.getZ());
             this.circlePositions = circleCalculator.generateCurve();
             if (this.circlePositions == null) {
                 System.err.println("circlePositions is null!");
