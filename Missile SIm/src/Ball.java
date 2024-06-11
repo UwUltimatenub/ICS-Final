@@ -11,18 +11,19 @@ import java.util.ArrayList;
  */
 
 public class Ball extends JPanel {
+    int currentIndex = 0;
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     private final int radius = 15;
     private int pWidth, pHeight, posx,  posy, missileX, missileY;
     CalculatedPoints lowestYPoint;
     private static final int TIMER_DELAY = 10;
-
     private int dx = 2;
     private boolean running = false;
     private Timer timer;
     public double a, b, c;
     private ArrayList<Point> points; // To store clicked points
+    ArrayList<Point> circlePositions;
     boolean draw=false;
     String motion;
 
@@ -117,21 +118,24 @@ public class Ball extends JPanel {
     }
     private void moveLinear() {
         // Calculate the distance between the missile and the rocket
-        double distance = Math.sqrt(Math.pow((int)lowestYPoint.getX() - missileX, 2) + Math.pow(lowestYPoint.getY() - missileY, 2));
-        double missileSpeed = distance / (TIMER_DELAY / 1000.0); // Pixels per second
-        
+        double distance = Math.sqrt(Math.pow(posx - missileX, 2) + Math.pow(posy - missileY, 2));
+        double missileSpeed = distance / lowestYPoint.getZ(); // Pixels per second
+
         // Normalize the direction vector
         double directionX = (lowestYPoint.getX() - missileX) / distance;
         double directionY = (lowestYPoint.getY() - missileY) / distance;
 
         // Update missile position
-        missileX += directionX * missileSpeed * (1/ 1000.0);
-        missileY += directionY * missileSpeed * (1/ 1000.0);
+        missileX += directionX * missileSpeed *lowestYPoint.getZ();
+        missileY += directionY * missileSpeed *lowestYPoint.getZ();
     }
 
     private void update() {
-        moveParabolic();
-        moveLinear();
+
+                moveLinear();
+
+                moveParabolic();
+
     }
 
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw, JPanel panel) {
@@ -141,18 +145,22 @@ public class Ball extends JPanel {
         this.draw = draw;
         ArrayList<CalculatedPoints> CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
         lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
-        missileX=lowestYPoint.getX();
         missileY=pHeight;
+        missileX=lowestYPoint.getX();
             
+        this.draw=draw;
+        
 
         if (!running) {
             running = true;
             timer.start();
-
-            // Call the drawCircleWithBezier method
-            //drawer.drawCircleWithBezier(start, end, 1000, panel);
-
+            CalculatedPoints lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
+        
+            BezierCircleCalculator circleCalculator = new BezierCircleCalculator();
+            this.circlePositions = circleCalculator.calculateCirclePositions(new Point(600, 1200),new Point(lowestYPoint.getX(), lowestYPoint.getY()), lowestYPoint.getZ());
+            System.out.println(this.circlePositions);
         }
+        
     }
 
     public void gameStop() {
@@ -196,16 +204,19 @@ public class Ball extends JPanel {
 
     if (draw){
         g2d.drawImage(rocket, posx - rocketWidth / 2, posy - rocketHeight / 2, null);
-        g2d.rotate(-angle-Math.toRadians(90), posx, posy);
-        g2d.drawImage(interceptionImage, missileX - rocketWidth / 2, missileY - rocketHeight / 2, null);
-
-    }
-        // Draw the rocket (rotated)
-        
     
+        if (currentIndex < circlePositions.size()) {
+            Point circlePosition = circlePositions.get(currentIndex);
+            g2d.setColor(Color.RED);
+            g2d.fillOval(circlePosition.x - radius / 2, circlePosition.y - radius / 2, radius, radius);
+            currentIndex++; // Move to the next point
+        }
+    }
+        
         // Reset transformation
         g2d.setTransform(oldTransform);
-    
+
+        g2d.drawImage(interceptionImage, missileX - rocketWidth / 2, missileY - rocketHeight / 2, null);
         // Draw the coordinates of the ball
         g2d.setColor(Color.BLACK);
         g2d.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);

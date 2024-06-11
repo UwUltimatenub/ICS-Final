@@ -15,6 +15,7 @@ public class MovingBalls extends JFrame implements MouseListener {
     private final int rocketHeight = 150;
     Image rocket, interceptionImage;
 
+
     public MovingBalls() {
         clickPoints = new ArrayList<>();
         errorMsg.setForeground(Color.RED);
