@@ -16,9 +16,9 @@ public class Ball extends JPanel {
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     private final int radius = 15;
-    private int pWidth, pHeight, posx,  posy;
+    private int pWidth, pHeight, posx,  posy, missileX, missileY;
     CalculatedPoints lowestYPoint;
-
+    private static final int TIMER_DELAY = 10;
     
     private int dx = 2;
     private boolean running = false;
@@ -36,7 +36,7 @@ public class Ball extends JPanel {
     public Ball(int pWidth, int pHeight, String motion, Image img) {
         try{ 
             rocket = new ImageIcon(getClass().getResource("LeRocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
-            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/12, rocketHeight/2, Image.SCALE_SMOOTH);
+            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/6, rocketHeight, Image.SCALE_SMOOTH);
         }catch(Exception e) {
             System.err.println("Error loading rocket images: ");
             e.printStackTrace();
@@ -115,6 +115,12 @@ protected void paintComponent(Graphics g) {
     }
 
     AffineTransform oldTransform = g2d.getTransform();
+<<<<<<< HEAD
+=======
+    g2d.rotate(angle + Math.toRadians(90), posx, posy);
+
+    g2d.setTransform(oldTransform);
+>>>>>>> parent of 53e025f (added images)
 
     g2d.setColor(Color.BLACK);
     g2d.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
@@ -122,6 +128,7 @@ protected void paintComponent(Graphics g) {
     if (CalculatedPoints != null && currentIndex2 < CalculatedPoints.size()) {
         CalculatedPoints newposition = CalculatedPoints.get(currentIndex2);
         g2d.setColor(Color.RED);
+<<<<<<< HEAD
     
 
         double slope = 2 * a * posx + b;
@@ -133,12 +140,16 @@ protected void paintComponent(Graphics g) {
         transform.rotate(angle + Math.toRadians(105), rocketWidth / 2, rocketHeight / 2);
 
         g2d.drawImage(rocket, transform, null);
+=======
+        g2d.fillOval(pointPos.x, pointPos.y, radius, radius);
+>>>>>>> parent of 53e025f (added images)
         currentIndex2++; // Move to the next point
     }
     
     if (circlePositions != null && currentIndex < circlePositions.size()) {
         Point positioning = circlePositions.get(currentIndex);
         g2d.setColor(Color.RED);
+<<<<<<< HEAD
     
 
         double slope = 2 * a * posx + b;
@@ -150,6 +161,9 @@ protected void paintComponent(Graphics g) {
         transform.rotate(angle + Math.toRadians(105), rocketHeight / 24, rocketHeight / 4);
 
         g2d.drawImage(interceptionImage, transform, null);
+=======
+        g2d.fillOval(Postioning.x, Postioning.y, radius, radius);
+>>>>>>> parent of 53e025f (added images)
         currentIndex++; // Move to the next point
     }
     
