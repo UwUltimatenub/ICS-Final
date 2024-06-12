@@ -15,13 +15,13 @@ public class LinearMotionCalculator {
         ArrayList<Point> motionPoints = new ArrayList<>();
 
         // Calculate the increments for x and y coordinates
-        deltaX = (endPoint.getX() - startPoint.getX()) / (double)numPoints;
-         deltaY = (endPoint.getY() - startPoint.getY()) / (double)numPoints;
+        deltaX = (endPoint.x - startPoint.x) / (double)numPoints;
+         deltaY = (endPoint.y - startPoint.y) / (double)numPoints;
 
         // Generate points along the linear path
         for (int i = 0; i <= numPoints; i++) {
-            double x = startPoint.getX() + i * deltaX;
-            double y = startPoint.getY() + i * deltaY;
+            double x = startPoint.x + i * deltaX;
+            double y = startPoint.y + i * deltaY;
             motionPoints.add(new Point((int)x, (int)y));
         }
 

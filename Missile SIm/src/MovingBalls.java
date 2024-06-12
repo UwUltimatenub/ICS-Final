@@ -4,55 +4,54 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 public class MovingBalls extends JFrame implements MouseListener {
-    JPanel panel, inputPanel, buttonPanel;
-    JButton start, stop;
-    private final int width = 1200;
-    private final int height = 1200;
-    JLabel errorMsg = new JLabel("Nothing to See here!");
-    Ball ball, interception;
-    ArrayList<Point> clickPoints, leStopArrayList;
-    private final int rocketWidth = 75;
-    private final int rocketHeight = 150;
-    Image rocket, interceptionImage;
+    private final int frameWidth = 1200;
+    private final int frameHeight = 1200;
+    private JPanel panel, inputPanel, buttonPanel;
+    private JButton start, stop, Eric, Aditya;
+    private JLabel errorMsg = new JLabel("Nothing to See here!");
+    private Ball ball;
+    private ArrayList<Point> clickPoints;
 
     public MovingBalls() {
         clickPoints = new ArrayList<>();
-        errorMsg.setForeground(Color.RED);
-        errorMsg.setVisible(false);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(width, height);
+        this.setSize(frameWidth, frameHeight);
         this.setLayout(new BorderLayout());
 
         panel = new JPanel();
-        panel.setPreferredSize(new Dimension(width, height - 150));
+        panel.setPreferredSize(new Dimension(frameWidth, frameHeight - 150));
         this.add(panel, BorderLayout.CENTER);
         panel.addMouseListener(this);
 
         inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(3, 4, 5, 5));
-        inputPanel.setPreferredSize(new Dimension(width, 50));
+        inputPanel.setPreferredSize(new Dimension(frameWidth, 25));
         inputPanel.setBackground(Color.gray);
         inputPanel.add(errorMsg);
+        errorMsg.setForeground(Color.RED);
+        errorMsg.setVisible(false);
         this.add(inputPanel, BorderLayout.NORTH);
 
         buttonPanel = new JPanel();
-        buttonPanel.setPreferredSize(new Dimension(width, 50));
+        buttonPanel.setPreferredSize(new Dimension(frameWidth, 50));
         buttonPanel.setBackground(Color.gray);
 
         start = new JButton("Start");
         stop = new JButton("Stop");
+        Eric = new JButton("Eric");
+        Aditya = new JButton("Aditya");
 
         buttonPanel.add(start);
         buttonPanel.add(stop);
+        buttonPanel.add(Eric);
+        buttonPanel.add(Aditya);
 
         this.add(buttonPanel, BorderLayout.SOUTH);
-
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        ball = new Ball(width, height - 150, "Parabolic", rocket);
-
+        ball = new Ball(frameWidth, frameHeight - 150);
         panel.add(ball);
         this.revalidate();
 
@@ -64,8 +63,8 @@ public class MovingBalls extends JFrame implements MouseListener {
                     Point p1 = clickPoints.get(0);
                     Point p2 = clickPoints.get(1);
                     Point p3 = clickPoints.get(2);
-                    ball.gameStart(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, true, panel);
-                    
+                    ball.gameStart(p1, p2, p3, panel);
+
                 } else {
                     errorMsg.setVisible(true);
                     inputPanel.revalidate();
@@ -80,6 +79,19 @@ public class MovingBalls extends JFrame implements MouseListener {
                 ball.gameStop();
             }
         });
+        Eric.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ball.setCircular(true);
+            }
+        });
+        Aditya.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ball.setCircular(false);
+            }
+        });
+
     }
 
     private boolean validateInputs() {
@@ -90,9 +102,8 @@ public class MovingBalls extends JFrame implements MouseListener {
             inputPanel.repaint();
             return false;
         }
-        if (ball.a < 0) {
+        if (ParabolicCalculator.a < 0) {
             errorMsg.setText("Please select 3 points which form a downward facing parabola");
-
             inputPanel.repaint();
             return false;
         } else {
@@ -136,12 +147,12 @@ public class MovingBalls extends JFrame implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // Implement the required method
+        // na
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // Implement the required method
+        // na
     }
 
     @Override
