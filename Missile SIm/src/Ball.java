@@ -113,58 +113,32 @@ protected void paintComponent(Graphics g) {
         g2d.drawLine(0, i, pWidth, i);
         g2d.drawString(Integer.toString(i), 0, i + 10);
     }
+    double slope = 2 * a * posx + b;
+    double angle = Math.atan(slope);
 
     AffineTransform oldTransform = g2d.getTransform();
-<<<<<<< HEAD
-=======
-    g2d.rotate(angle + Math.toRadians(90), posx, posy);
-
-    g2d.setTransform(oldTransform);
->>>>>>> parent of 53e025f (added images)
 
     g2d.setColor(Color.BLACK);
     g2d.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
 
     if (CalculatedPoints != null && currentIndex2 < CalculatedPoints.size()) {
         CalculatedPoints newposition = CalculatedPoints.get(currentIndex2);
+        Point pointPos = new Point(newposition.getX(), newposition.getY());
         g2d.setColor(Color.RED);
-<<<<<<< HEAD
-    
 
-        double slope = 2 * a * posx + b;
-        double angle = Math.atan(slope);
-
-        AffineTransform transform = new AffineTransform();
-        transform.translate(newposition.getX(), newposition.getY());
-
-        transform.rotate(angle + Math.toRadians(105), rocketWidth / 2, rocketHeight / 2);
-
-        g2d.drawImage(rocket, transform, null);
-=======
-        g2d.fillOval(pointPos.x, pointPos.y, radius, radius);
->>>>>>> parent of 53e025f (added images)
+        g2d.rotate(angle+Math.toRadians(105), newposition.getX(), newposition.getY());
+        g2d.drawImage(rocket, newposition.getX()-rocketWidth/2, newposition.getY()-rocketHeight/2, null);
+        g2d.setTransform(oldTransform);
         currentIndex2++; // Move to the next point
+        //System.out.print(pointPos + ", ");
     }
-    
     if (circlePositions != null && currentIndex < circlePositions.size()) {
-        Point positioning = circlePositions.get(currentIndex);
+        Point Postioning = circlePositions.get(currentIndex);
         g2d.setColor(Color.RED);
-<<<<<<< HEAD
-    
+        g2d.drawImage(interceptionImage, Postioning.x-rocketHeight/24, Postioning.y-rocketHeight/4, null);
 
-        double slope = 2 * a * posx + b;
-        double angle = Math.atan(slope);
-
-        AffineTransform transform = new AffineTransform();
-        transform.translate(positioning.getX(), positioning.getY());
-
-        transform.rotate(angle + Math.toRadians(105), rocketHeight / 24, rocketHeight / 4);
-
-        g2d.drawImage(interceptionImage, transform, null);
-=======
-        g2d.fillOval(Postioning.x, Postioning.y, radius, radius);
->>>>>>> parent of 53e025f (added images)
         currentIndex++; // Move to the next point
+        //System.out.print(circlePosition + ", ");
     }
     
     g2d.setColor(Color.RED);
