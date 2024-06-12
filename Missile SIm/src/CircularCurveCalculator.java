@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 
 public class CircularCurveCalculator {
-    private Point startPoint;
-    private Point endPoint;
+    private Point startPoint, endPoint;
+
     private int numPoints;
+
+    public Point center;
 
     public CircularCurveCalculator(Point startPoint, Point endPoint, int numPoints) {
         this.startPoint = startPoint;
@@ -15,7 +17,7 @@ public class CircularCurveCalculator {
         ArrayList<Point> curvePoints = new ArrayList<>();
 
         // Calculate the center point of the circle passing through start and end points
-        Point center = calculateCenter(startPoint, endPoint);
+        center = calculateCenter(startPoint, endPoint);
 
         // Calculate the radius of the circle
         double radius = calculateRadius(startPoint, endPoint, center);

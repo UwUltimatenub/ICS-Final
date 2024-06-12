@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class ParabolicCalculator {
     private static final int GRID_SIZE = 1200;
+    public static double a, b, c;
 
     public static ArrayList<CalculatedPoints> calculateParabolaPoints(int x1, int y1, int x2, int y2, int x3, int y3) {
 
@@ -10,7 +11,7 @@ public class ParabolicCalculator {
         Point p2 = new Point(x2, y2);
         Point p3 = new Point(x3, y3);
 
-        double a, b, c;
+
 
         double[][] matrix = {
             {p1.x * p1.x, p1.x, 1},
@@ -64,4 +65,5 @@ public class ParabolicCalculator {
              - matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0])
              + matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
     }
+    
 }
