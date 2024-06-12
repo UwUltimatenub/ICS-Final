@@ -9,7 +9,7 @@ public class VertexFinder {
         
         CalculatedPoints lowestYObject = CalculatedPoints.get(0);
         for (CalculatedPoints obj : CalculatedPoints) {
-            if (obj.getY() < lowestYObject.getY()) {
+            if (obj.y < lowestYObject.y) {
                 lowestYObject = obj;
             }
         }

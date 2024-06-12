@@ -16,7 +16,7 @@ public class LinearMotionCalculator {
 
         // Calculate the increments for x and y coordinates
         deltaX = (endPoint.x - startPoint.x) / (double)numPoints;
-         deltaY = (endPoint.y - startPoint.y) / (double)numPoints;
+        deltaY = (endPoint.y - startPoint.y) / (double)numPoints;
 
         // Generate points along the linear path
         for (int i = 0; i <= numPoints; i++) {

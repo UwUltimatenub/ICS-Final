@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class ParabolicCalculator {
-    private static final int GRID_SIZE = 1200;
+    private static final int GRID_SIZE = 800;
     public static double a, b, c;
 
 

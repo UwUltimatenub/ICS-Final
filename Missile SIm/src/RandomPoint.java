@@ -9,7 +9,7 @@ public class RandomPoint {
         }
         ArrayList<CalculatedPoints> randomPosList = new ArrayList<>();
         for (CalculatedPoints obj : CalculatedPoints) {
-            if (obj.getZ() > CalculatedPoints.size()/2 && obj.getY() < 800) {
+            if (obj.z > CalculatedPoints.size()/2 && obj.y < 550) {
                 randomPosList.add(obj);
             }
         }

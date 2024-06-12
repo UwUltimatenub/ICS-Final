@@ -4,13 +4,16 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 public class MovingBalls extends JFrame implements MouseListener {
-    private final int frameWidth = 1200;
-    private final int frameHeight = 1200;
+    private final int frameWidth = 800;
+    private final int frameHeight = 800;
     private JPanel panel, inputPanel, buttonPanel;
     private JButton start, stop, Eric, Aditya;
     private JLabel errorMsg = new JLabel("Nothing to See here!");
+    
+  
     private Ball ball;
     private ArrayList<Point> clickPoints;
+
 
     public MovingBalls() {
         clickPoints = new ArrayList<>();
