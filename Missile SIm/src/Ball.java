@@ -16,9 +16,9 @@ public class Ball extends JPanel {
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     private final int radius = 15;
-    private int pWidth, pHeight, posx,  posy, missileX, missileY;
+    private int pWidth, pHeight, posx,  posy;
     CalculatedPoints lowestYPoint;
-    private static final int TIMER_DELAY = 10;
+
     
     private int dx = 2;
     private boolean running = false;
@@ -36,7 +36,7 @@ public class Ball extends JPanel {
     public Ball(int pWidth, int pHeight, String motion, Image img) {
         try{ 
             rocket = new ImageIcon(getClass().getResource("LeRocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
-            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/6, rocketHeight, Image.SCALE_SMOOTH);
+            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/12, rocketHeight/2, Image.SCALE_SMOOTH);
         }catch(Exception e) {
             System.err.println("Error loading rocket images: ");
             e.printStackTrace();
@@ -53,6 +53,7 @@ public class Ball extends JPanel {
         timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                update();
                 repaint();
             }
         });
@@ -68,6 +69,20 @@ public class Ball extends JPanel {
         repaint();
     }
 
+
+    private void moveParabolic() {
+        posx += dx;
+        posy = (int) (a * posx * posx + b * posx + c);
+
+        if (posx > pWidth - 2 * rocketWidth/2 || posx < rocketWidth/2) {
+            dx = -dx;
+        }
+    }
+
+    private void update() {
+        moveParabolic();
+    }
+
     public void gameStart(int x1, int y1, int x2, int y2, int x3, int y3, boolean draw, JPanel panel) {
         posx = rocketWidth / 2;
         posy = (int) (a * posx * posx + b * posx + c);
@@ -79,9 +94,23 @@ public class Ball extends JPanel {
             currentIndex = 0;
             currentIndex2 = 0;
             this.CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(x1, y1, x2, y2, x3, y3);
+            if (this.CalculatedPoints == null || this.CalculatedPoints.isEmpty()) {
+                System.err.println("CalculatedPoints is null or empty after calculation!");
+                return; // Or handle this situation appropriately
+            }
             CalculatedPoints RandomPos = (CalculatedPoints) RandomPoint.findRandomPos(this.CalculatedPoints);
-            CircularCurveCalculator circleCalculator = new CircularCurveCalculator(new Point(600, 1100), new Point(RandomPos.getX(), RandomPos.getY()), RandomPos.getZ());
-            this.circlePositions = circleCalculator.generateCurve();   
+            if (RandomPos == null) {
+                System.err.println("lowestYPoint is null!");
+                return; // Or handle this situation appropriately
+            }
+            
+            CircularCurveCalculator circleCalculator = new CircularCurveCalculator(new Point(350, 1200), new Point(RandomPos.getX(), RandomPos.getY()), RandomPos.getZ());
+            this.circlePositions = circleCalculator.generateCurve();
+            if (this.circlePositions == null) {
+                System.err.println("circlePositions is null!");
+                return; // Or handle this situation appropriately
+            }
+            
         }
     }
 
@@ -117,6 +146,9 @@ protected void paintComponent(Graphics g) {
     double angle = Math.atan(slope);
 
     AffineTransform oldTransform = g2d.getTransform();
+    
+
+    
 
     g2d.setColor(Color.BLACK);
     g2d.drawString("Coordinates: (" + posx + ", " + posy + ")", 10, 20);
@@ -140,7 +172,6 @@ protected void paintComponent(Graphics g) {
         currentIndex++; // Move to the next point
         //System.out.print(circlePosition + ", ");
     }
-    
     g2d.setColor(Color.RED);
     for (Point point : points) {
         g2d.fillOval(point.x - radius / 2, point.y - radius / 2, radius, radius);
