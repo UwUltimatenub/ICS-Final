@@ -3,14 +3,15 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+
 public class MovingBalls extends JFrame implements MouseListener {
-    private final int frameWidth = 800;
-    private final int frameHeight = 800;
+    private final int frameWidth = 850;
+    private final int frameHeight = 960;
     private JPanel panel, inputPanel, buttonPanel;
     private JButton start, stop, Eric, Aditya;
     private JLabel errorMsg = new JLabel("Nothing to See here!");
+    private JLabel redTextLabel = new JLabel("<html>Left click to add 3 points on the grid, the points should not be on the same X or Y axis and it should make a curve that.\n opens downwards, Right Click will remove.</html>");
     
-  
     private Ball ball;
     private ArrayList<Point> clickPoints;
 
@@ -29,11 +30,14 @@ public class MovingBalls extends JFrame implements MouseListener {
 
         inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(3, 4, 5, 5));
-        inputPanel.setPreferredSize(new Dimension(frameWidth, 25));
+        inputPanel.setPreferredSize(new Dimension(frameWidth, 90));
         inputPanel.setBackground(Color.gray);
-        inputPanel.add(errorMsg);
-        errorMsg.setForeground(Color.RED);
-        errorMsg.setVisible(false);
+        inputPanel.add(redTextLabel); // Add red text label
+        redTextLabel.setForeground(Color.RED);
+        redTextLabel.setMinimumSize(new Dimension(frameWidth, 40));
+        redTextLabel.setVerticalAlignment(SwingUtilities.CENTER);
+        inputPanel.add(redTextLabel); // Add red text label
+
         this.add(inputPanel, BorderLayout.NORTH);
 
         buttonPanel = new JPanel();
