@@ -6,20 +6,25 @@ import java.awt.geom.AffineTransform;
 import javax.swing.*;
 import java.util.ArrayList;
 
+
 /**
  * This is the ball class. This class includes the game loop as well as different movements for the ball as well as colour, and speed.
  */
 
 public class Ball extends JPanel {
     private int pWidth, pHeight;
-    private Image rocket, interceptionImage;
+    private Image rocket, interceptionImage, explosionImage;
+
     private final int rocketWidth = 75;
     private final int rocketHeight = 150;
     private final int missileWidth = 13;
     private final int missileHeight = 75;
     private final int radius = 15;
+    private boolean interceptOccurred = false;
 
-    private Timer timer;
+    float explosionAlpha= 1;
+
+    private Timer timer, explosionTimer;
 
    private int currentIndex = 0;
    private int currentIndex2 = 0;
@@ -35,17 +40,21 @@ public class Ball extends JPanel {
     private boolean setCircular= true;
     private boolean running = false;
 
+    private Point interceptPoint;
 
     
 
     public Ball(int pWidth, int pHeight) {
+        
         try{ 
+            explosionImage = new ImageIcon(getClass().getResource("explosionfr.png")).getImage().getScaledInstance( 300, 300, Image.SCALE_SMOOTH);
             rocket = new ImageIcon(getClass().getResource("LeRocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
             interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/12, rocketHeight/2, Image.SCALE_SMOOTH);
         }catch(Exception e) {
             System.err.println("Error loading rocket images: ");
             e.printStackTrace();
         }
+       
 
         this.pWidth = pWidth;
         this.pHeight = pHeight;
@@ -83,10 +92,12 @@ public class Ball extends JPanel {
         if (!running) {
             running = true;
             timer.start();
+
             currentIndex = 0;
             currentIndex2 = 0;
-            this.CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(p1, p2, p3);
-            if (this.CalculatedPoints == null || this.CalculatedPoints.isEmpty()) {
+            CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(p1, p2, p3);
+            lowestYPoint = (CalculatedPoints)VertexFinder.findLowestY(CalculatedPoints);
+            if (CalculatedPoints == null || CalculatedPoints.isEmpty()) {
                 System.err.println("CalculatedPoints is null or empty after calculation!");
                 return; // Or handle this situation appropriately
             }
@@ -96,10 +107,11 @@ public class Ball extends JPanel {
                 return; // Or handle this situation appropriately
             }
             
-                circleCalculator = new CircularCurveCalculator(new Point(350, 1200), new Point(RandomPos.getX(), RandomPos.getY()), RandomPos.getZ());
-                linearMotionCalculator = new LinearMotionCalculator(new Point(600, 1200), new Point(RandomPos.getX(), RandomPos.getY()), RandomPos.getZ());
-                linearPositions = linearMotionCalculator.generateMotion();
+                circleCalculator = new CircularCurveCalculator(new Point(200, 800), new Point(RandomPos.x, RandomPos.y), RandomPos.z);
                 circlePositions = circleCalculator.generateCurve();
+                linearMotionCalculator = new LinearMotionCalculator(new Point(lowestYPoint.x, 800), new Point(RandomPos.x, RandomPos.y), RandomPos.z);
+                linearPositions = linearMotionCalculator.generateMotion();
+
 
             if (this.circlePositions == null) {
                 System.err.println("circlePositions is null!");
@@ -112,6 +124,7 @@ public class Ball extends JPanel {
     public void gameStop() {
         running = false;
         timer.stop();
+
     }
 
     private void drawGrid(Graphics2D g2d) {
@@ -129,17 +142,17 @@ public class Ball extends JPanel {
     private void drawParabolicMotion(Graphics2D g2d) {
         if (CalculatedPoints != null && currentIndex2 < CalculatedPoints.size()) {
             CalculatedPoints newposition = CalculatedPoints.get(currentIndex2);
-            double slope = 2 * ParabolicCalculator.a * newposition.getX() + ParabolicCalculator.b;
+            double slope = 2 * ParabolicCalculator.a * newposition.x+ ParabolicCalculator.b;
         double angle = Math.atan(slope);
     
         AffineTransform oldTransform = g2d.getTransform();
 
             g2d.setColor(Color.BLACK);
-            g2d.drawString("Coordinates: (" + newposition.getX() + ", " + newposition.getY() + ")", 10, 20);
+            g2d.drawString("Coordinates: (" + newposition.x + ", " + newposition.y + ")", 10, 20);
             g2d.setColor(Color.RED);
     
-            g2d.rotate(angle+Math.toRadians(90), newposition.getX(), newposition.getY());
-            g2d.drawImage(rocket, newposition.getX()-rocketWidth/2, newposition.getY()-rocketHeight/2, null);
+            g2d.rotate(angle+Math.toRadians(90), newposition.x, newposition.y);
+            g2d.drawImage(rocket, newposition.x-rocketWidth/2, newposition.y-rocketHeight/2, null);
             g2d.setTransform(oldTransform);
             currentIndex2++; // Move to the next point
         }
@@ -147,31 +160,43 @@ public class Ball extends JPanel {
     private void drawLinearMotion(Graphics2D g2d) {
         if (linearPositions != null && currentIndex < linearPositions.size()) {
         
-            Point Postioning = linearPositions.get(currentIndex);
-    
+            Point Positioning = linearPositions.get(currentIndex);
+
+            double slope=-Math.abs(linearMotionCalculator.deltaY/linearMotionCalculator.deltaX);
             AffineTransform oldTransform = g2d.getTransform();
-            g2d.rotate(Math.toRadians(90)+Math.atan(linearMotionCalculator.deltaY/linearMotionCalculator.deltaX), Postioning.x-missileWidth/2, Postioning.y-Postioning.y-missileHeight/2);
+            g2d.rotate(Math.toRadians(90)+Math.atan(slope), Positioning.x-missileWidth/2, Positioning.y-missileHeight/2);
             g2d.setColor(Color.RED);
-            g2d.drawImage(interceptionImage, Postioning.x-missileWidth/2, Postioning.y-missileHeight/2, null);
+            g2d.drawImage(interceptionImage, Positioning.x-missileWidth/2, Positioning.y-missileHeight/2, null);
             g2d.setTransform(oldTransform);
             currentIndex++;
-        }else{
+            interceptPoint=linearPositions.get(linearPositions.size()-1);
+        }else if (running){
+ 
+            interceptOccurred= true;
+            boomtimer();
             gameStop();
+            
+            System.out.println("game stopped");
         }
     }
+    
     private void drawCircularMotion(Graphics2D g2d) {
         if (circlePositions != null && currentIndex < circlePositions.size()) {
         
-            Point Postioning = circlePositions.get(currentIndex);
-            double angle= AngleCalculator.calculateAngle(circleCalculator.center.x, circleCalculator.center.y,Postioning.x-rocketHeight/24, Postioning.y-rocketHeight/4);
+            Point Positioning = circlePositions.get(currentIndex);
+            double angle= AngleCalculator.calculateAngle(circleCalculator.center.x, circleCalculator.center.y,Positioning.x-rocketHeight/24, Positioning.y-rocketHeight/4);
             AffineTransform oldTransform = g2d.getTransform();
-            g2d.rotate(angle+Math.toRadians(180), Postioning.x-missileWidth/2, Postioning.y-missileHeight/2);
+            g2d.rotate(angle+Math.toRadians(180), Positioning.x-missileWidth/2, Positioning.y-missileHeight/2);
             g2d.setColor(Color.RED);
-            g2d.drawImage(interceptionImage, Postioning.x-missileWidth/2, Postioning.y-missileHeight/2, null);
+            g2d.drawImage(interceptionImage, Positioning.x-missileWidth/2, Positioning.y-missileHeight/2, null);
             g2d.setTransform(oldTransform);
             currentIndex++; // Move to the next point
-        }else{
+            interceptPoint=new Point(circlePositions.get(circlePositions.size()-1).x,circlePositions.get(circlePositions.size()-1).y );
+        }else if (running){
+            interceptOccurred= true;
             gameStop();
+            System.out.println("game stopped");
+            boomtimer();
         }
     }
     private void drawPoints(Graphics g2d){
@@ -189,8 +214,10 @@ protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     Graphics2D g2d = (Graphics2D) g.create();
 
-    drawGrid(g2d);
-    drawParabolicMotion(g2d);
+    
+    if (!interceptOccurred ) {
+        drawGrid(g2d);
+        drawParabolicMotion(g2d);
     if (setCircular){
         drawCircularMotion(g2d);
     }else{
@@ -198,6 +225,32 @@ protected void paintComponent(Graphics g) {
     }
     drawPoints(g2d);
 
+    }
+    else if (interceptOccurred){
+        System.out.println("oof");//debug
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, explosionAlpha));
+        g2d.drawImage(explosionImage, interceptPoint.x-explosionImage.getWidth(this)/2,
+        interceptPoint.y-explosionImage.getHeight(this)/2, this);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+    }
     g2d.dispose();
+}
+private void boomtimer(){
+    explosionTimer = new Timer(50, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("timer running");//debug
+            explosionAlpha -= 0.02f;
+            if (explosionAlpha <= 0.0f) {
+                explosionTimer.stop();
+                explosionAlpha = 0.0f;
+                
+            }
+            repaint();
+            
+        }
+        
+    });
+    explosionTimer.start();
 }
 }

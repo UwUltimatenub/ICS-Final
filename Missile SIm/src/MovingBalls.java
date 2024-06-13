@@ -80,6 +80,7 @@ public class MovingBalls extends JFrame implements MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ball.gameStop();
+                
             }
         });
         Eric.addActionListener(new ActionListener() {
