@@ -87,16 +87,18 @@ public class Ball extends JPanel {
     
 
     public void gameStart(Point p1, Point p2, Point p3, JPanel panel) {
-
+        // Reset explosion state
+        interceptOccurred = false;
+        explosionAlpha = 1.0f;
     
         if (!running) {
             running = true;
             timer.start();
-
+    
             currentIndex = 0;
             currentIndex2 = 0;
             CalculatedPoints = ParabolicCalculator.calculateParabolaPoints(p1, p2, p3);
-            lowestYPoint = (CalculatedPoints)VertexFinder.findLowestY(CalculatedPoints);
+            lowestYPoint = (CalculatedPoints) VertexFinder.findLowestY(CalculatedPoints);
             if (CalculatedPoints == null || CalculatedPoints.isEmpty()) {
                 System.err.println("CalculatedPoints is null or empty after calculation!");
                 return; // Or handle this situation appropriately
@@ -106,20 +108,19 @@ public class Ball extends JPanel {
                 System.err.println("lowestYPoint is null!");
                 return; // Or handle this situation appropriately
             }
-            
-                circleCalculator = new CircularCurveCalculator(new Point(200, 800), new Point(RandomPos.x, RandomPos.y), RandomPos.z);
-                circlePositions = circleCalculator.generateCurve();
-                linearMotionCalculator = new LinearMotionCalculator(new Point(lowestYPoint.x, 800), new Point(RandomPos.x, RandomPos.y), RandomPos.z);
-                linearPositions = linearMotionCalculator.generateMotion();
-
-
+    
+            circleCalculator = new CircularCurveCalculator(new Point(200, 800), new Point(RandomPos.x, RandomPos.y), RandomPos.z);
+            circlePositions = circleCalculator.generateCurve();
+            linearMotionCalculator = new LinearMotionCalculator(new Point(lowestYPoint.x, 800), new Point(RandomPos.x, RandomPos.y), RandomPos.z);
+            linearPositions = linearMotionCalculator.generateMotion();
+    
             if (this.circlePositions == null) {
                 System.err.println("circlePositions is null!");
                 return; // Or handle this situation appropriately
             }
-            
         }
     }
+    
 
     public void gameStop() {
         running = false;
@@ -209,38 +210,44 @@ public class Ball extends JPanel {
     }
 }
 
-    @Override
+@Override
 protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     Graphics2D g2d = (Graphics2D) g.create();
 
-    
-    if (!interceptOccurred ) {
-        drawGrid(g2d);
+    // Draw the grid
+    drawGrid(g2d);
+
+    // Draw the parabolic motion, circular motion, and points
+    if (!interceptOccurred) {
         drawParabolicMotion(g2d);
-    if (setCircular){
-        drawCircularMotion(g2d);
-    }else{
-        drawLinearMotion(g2d);
+        if (setCircular) {
+            drawCircularMotion(g2d);
+        } else {
+            drawLinearMotion(g2d);
+        }
     }
+    
+    // Draw the red points
     drawPoints(g2d);
 
-    }
-    else if (interceptOccurred){
-        System.out.println("oof");//debug
+    // Draw the explosion if intercept occurred
+    if (interceptOccurred) {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, explosionAlpha));
-        g2d.drawImage(explosionImage, interceptPoint.x-explosionImage.getWidth(this)/2,
-        interceptPoint.y-explosionImage.getHeight(this)/2, this);
+        g2d.drawImage(explosionImage, interceptPoint.x - explosionImage.getWidth(this) / 2,
+                interceptPoint.y - explosionImage.getHeight(this) / 2, this);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
     }
+
     g2d.dispose();
 }
+
+
 private void boomtimer(){
     explosionTimer = new Timer(50, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("timer running");//debug
-            explosionAlpha -= 0.02f;
+            explosionAlpha -= 0.03f;
             if (explosionAlpha <= 0.0f) {
                 explosionTimer.stop();
                 explosionAlpha = 0.0f;

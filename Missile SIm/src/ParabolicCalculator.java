@@ -44,7 +44,7 @@ public class ParabolicCalculator {
         ArrayList<CalculatedPoints> CalculatedPoints = new ArrayList<>();
         int z = 0;
 
-        for (int x = 0; x < GRID_SIZE; x+= 3) {
+        for (int x = 0; x < GRID_SIZE; x+= 2) {
             int y = (int)(a * x * x + b * x + c); 
             if (y >= 0 && y <= GRID_SIZE) {
                 CalculatedPoints.add(new CalculatedPoints(x, y,z));
