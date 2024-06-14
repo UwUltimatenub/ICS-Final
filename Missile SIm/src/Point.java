@@ -1,4 +1,4 @@
-/*This class overrides the Point class to create a toString Method to print the x and y coordinates */
+/*This class overrides the default Point class to create a toString Method to print the x and y coordinates */
 public class Point {
     public int x;
     public int y;

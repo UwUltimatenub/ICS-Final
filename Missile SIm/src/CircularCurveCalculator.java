@@ -3,7 +3,7 @@ import java.util.ArrayList;
  * The CircularCurveCalculator class calculates the points along a circular curve 
  * given a start point, an end point, and the number of points to generate along the curve. 
  * It calculates the center and radius of the circle. Using this information, it adds all the 
- * points to an ArrayList called motionPoints.
+ * points to an ArrayList called curvePoints.
  * 
  * - generateCurve(): Generates and returns an ArrayList of points along the circular curve.
  *   - It calculates the center of the circle from the start and end points.
