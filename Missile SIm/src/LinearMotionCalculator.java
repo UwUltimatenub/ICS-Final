@@ -1,5 +1,8 @@
 import java.util.ArrayList;
-
+/**
+ * This class takes the startpoint and endpoint of the linear line and take the number 
+ *  of points it will print to reach the end. It calculates the slope, and adds all the points to an arraylist called motionPoints
+ */
 public class LinearMotionCalculator {
     private Point startPoint, endPoint;
     private int numPoints;

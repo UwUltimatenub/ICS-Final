@@ -3,18 +3,26 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+/**
+ * This is the frame which contains all the main components of this program. 
+ * It contains the main class that constructs this frame. 
+ * Inside the constructor, it creates 3 panels. One for buttons, one for drawing and one for the error message.
+ * This class is also implementing the mouseListener for any clicks on the drawing panel which can be take as points of the parabola. 
+ * After picking 3 points, the user can choose which motion to use (Eric or Aditya)-Linear or Circular- and then can press start for the animation to begin, 
+ * and stop for it to close. 
+ */
 
-public class MovingBalls extends JFrame implements MouseListener {
+public class GUI extends JFrame implements MouseListener {
     private final int frameWidth = 850;
     private final int frameHeight = 960;
     private JPanel panel, inputPanel, buttonPanel;
     private JButton start, stop, Eric, Aditya;
     private JLabel redTextLabel;
-    private Ball ball;
+    private DrawingPanel ball;
     private ArrayList<Point> clickPoints;
 
 
-    public MovingBalls() {
+    public GUI() {
         redTextLabel = new JLabel("<html>Left click to add 3 points on the grid, the points should not be on the same X or Y axis and it should make a curve that opens downwards, Right Click will remove.</html>");
         clickPoints = new ArrayList<>();
 
@@ -32,6 +40,7 @@ public class MovingBalls extends JFrame implements MouseListener {
         inputPanel.setLayout(new GridBagLayout());
         inputPanel.setBackground(Color.gray);
         inputPanel.add(redTextLabel); // Add red text label
+
         redTextLabel.setPreferredSize(new Dimension(frameWidth - 20, 70)); // Slightly smaller than panel width
         redTextLabel.setHorizontalAlignment(SwingConstants.CENTER); // Center the text horizontally
         redTextLabel.setVerticalAlignment(SwingUtilities.CENTER); // Center the text vertically
@@ -65,7 +74,7 @@ public class MovingBalls extends JFrame implements MouseListener {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        ball = new Ball(frameWidth, frameHeight - 150);
+        ball = new DrawingPanel(frameWidth, frameHeight - 150);
         panel.add(ball);
         this.revalidate();
 
@@ -117,11 +126,11 @@ public class MovingBalls extends JFrame implements MouseListener {
                 int relativeY = e.getY();
                 clickPoints.add(new Point(relativeX, relativeY));
                 ball.addPoint(new Point(relativeX, relativeY));
-                System.out.println("Point added: " + relativeX + ", " + relativeY); // Debug statement
-                System.out.println("Total Points: " + clickPoints.size()); // Debug statement
+                System.out.println("Point added: " + relativeX + ", " + relativeY); 
+                System.out.println("Total Points: " + clickPoints.size()); 
                 panel.repaint();
             } else {
-                System.out.println("Already have 3 points"); // Debug statement
+                System.out.println("Already have 3 points"); 
             }
         } else if (SwingUtilities.isRightMouseButton(e)) {
             if (!clickPoints.isEmpty()) {
@@ -130,17 +139,17 @@ public class MovingBalls extends JFrame implements MouseListener {
                 for (Point p : clickPoints) {
                     ball.addPoint(p);
                 }
-                System.out.println("Total Points: " + clickPoints.size()); // Debug statement
-                System.out.println("Point removed"); // Debug statement
+                System.out.println("Total Points: " + clickPoints.size()); 
+                System.out.println("Point removed"); 
                 panel.repaint();
             } else {
-                System.out.println("No points to remove"); // Debug statement
+                System.out.println("No points to remove"); 
             }
         }
     }
 
     public static void main(String[] args) {
-        new MovingBalls();
+        new GUI();
     }
 
     @Override
