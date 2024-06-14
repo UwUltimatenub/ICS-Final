@@ -49,7 +49,7 @@ public class Ball extends JPanel {
         try{ 
             explosionImage = new ImageIcon(getClass().getResource("explosionfr.png")).getImage().getScaledInstance( 300, 300, Image.SCALE_SMOOTH);
             rocket = new ImageIcon(getClass().getResource("LeRocket.png")).getImage().getScaledInstance( rocketWidth, rocketHeight, Image.SCALE_SMOOTH);
-            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( rocketHeight/12, rocketHeight/2, Image.SCALE_SMOOTH);
+            interceptionImage= new ImageIcon(getClass().getResource("LeStop!.png")).getImage().getScaledInstance( missileWidth, missileHeight, Image.SCALE_SMOOTH);
         }catch(Exception e) {
             System.err.println("Error loading rocket images: ");
             e.printStackTrace();
