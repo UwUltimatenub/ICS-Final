@@ -29,9 +29,9 @@ public class Ball extends JPanel {
    private int currentIndex = 0;
    private int currentIndex2 = 0;
     
-    private ArrayList<Point> points; // To store clicked points
+    private ArrayList<Point> points, circlePositions, linearPositions; // To store clicked points
     private ArrayList<CalculatedPoints> CalculatedPoints;
-    private ArrayList<Point> circlePositions, linearPositions;
+
 
     private CalculatedPoints lowestYPoint;
     private CircularCurveCalculator circleCalculator;

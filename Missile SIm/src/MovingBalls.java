@@ -9,13 +9,13 @@ public class MovingBalls extends JFrame implements MouseListener {
     private final int frameHeight = 960;
     private JPanel panel, inputPanel, buttonPanel;
     private JButton start, stop, Eric, Aditya;
-    private JLabel redTextLabel = new JLabel("<html>Left click to add 3 points on the grid, the points should not be on the same X or Y axis and it should make a curve that opens downwards, Right Click will remove.</html>");
-    
+    private JLabel redTextLabel;
     private Ball ball;
     private ArrayList<Point> clickPoints;
 
 
     public MovingBalls() {
+        redTextLabel = new JLabel("<html>Left click to add 3 points on the grid, the points should not be on the same X or Y axis and it should make a curve that opens downwards, Right Click will remove.</html>");
         clickPoints = new ArrayList<>();
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
