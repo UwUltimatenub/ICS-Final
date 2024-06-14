@@ -56,7 +56,7 @@ public class DrawingPanel extends JPanel {
     private LinearMotionCalculator linearMotionCalculator;
 
     private boolean setCircular = true;
-    private boolean running = false;
+    public boolean running = false;
     private boolean interceptOccurred = false;
 
     public DrawingPanel(int pWidth, int pHeight) {
@@ -130,7 +130,7 @@ public class DrawingPanel extends JPanel {
     }
 
     public void gameStop() {
-        running = false;
+
         timer.stop();
 
     }
@@ -260,7 +260,7 @@ public class DrawingPanel extends JPanel {
                 if (explosionAlpha <= 0.0f) {
                     explosionTimer.stop();
                     explosionAlpha = 0.0f;
-
+                    running = false;
                 }
                 repaint();
 

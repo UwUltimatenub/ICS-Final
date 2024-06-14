@@ -80,7 +80,7 @@ public class GUI extends JFrame implements MouseListener {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (clickPoints.size() == 3 ) {
+                if (clickPoints.size() == 3 && !ball.running) {
 
                     Point p1 = clickPoints.get(0);
                     Point p2 = clickPoints.get(1);
