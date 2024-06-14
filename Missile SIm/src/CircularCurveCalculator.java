@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 
 public class CircularCurveCalculator {
-    private Point startPoint, endPoint;
+
 
     private int numPoints;
-
-    public Point center;
+    public Point center, startPoint, endPoint;
 
     public CircularCurveCalculator(Point startPoint, Point endPoint, int numPoints) {
         this.startPoint = startPoint;

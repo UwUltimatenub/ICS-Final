@@ -9,8 +9,7 @@ public class MovingBalls extends JFrame implements MouseListener {
     private final int frameHeight = 960;
     private JPanel panel, inputPanel, buttonPanel;
     private JButton start, stop, Eric, Aditya;
-    private JLabel errorMsg = new JLabel("Nothing to See here!");
-    private JLabel redTextLabel = new JLabel("<html>Left click to add 3 points on the grid, the points should not be on the same X or Y axis and it should make a curve that.\n opens downwards, Right Click will remove.</html>");
+    private JLabel redTextLabel = new JLabel("<html>Left click to add 3 points on the grid, the points should not be on the same X or Y axis and it should make a curve that opens downwards, Right Click will remove.</html>");
     
     private Ball ball;
     private ArrayList<Point> clickPoints;
@@ -29,13 +28,21 @@ public class MovingBalls extends JFrame implements MouseListener {
         panel.addMouseListener(this);
 
         inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(3, 4, 5, 5));
-        inputPanel.setPreferredSize(new Dimension(frameWidth, 90));
+        inputPanel.setPreferredSize(new Dimension(frameWidth, 70));
+        inputPanel.setLayout(new GridBagLayout());
         inputPanel.setBackground(Color.gray);
         inputPanel.add(redTextLabel); // Add red text label
-        redTextLabel.setForeground(Color.RED);
-        redTextLabel.setMinimumSize(new Dimension(frameWidth, 40));
-        redTextLabel.setVerticalAlignment(SwingUtilities.CENTER);
+        redTextLabel.setPreferredSize(new Dimension(frameWidth - 20, 70)); // Slightly smaller than panel width
+        redTextLabel.setHorizontalAlignment(SwingConstants.CENTER); // Center the text horizontally
+        redTextLabel.setVerticalAlignment(SwingUtilities.CENTER); // Center the text vertically
+        redTextLabel.setFont(new Font("Serif", Font.PLAIN, 24)); // Make the font larger
+        redTextLabel.setForeground(Color.black); // Make the font larger
+        redTextLabel.setBackground(Color.RED); 
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding around the label
         inputPanel.add(redTextLabel); // Add red text label
 
         this.add(inputPanel, BorderLayout.NORTH);
@@ -65,15 +72,14 @@ public class MovingBalls extends JFrame implements MouseListener {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (clickPoints.size() == 3 && validateInputs()) {
-                    errorMsg.setVisible(false);
+                if (clickPoints.size() == 3 ) {
+
                     Point p1 = clickPoints.get(0);
                     Point p2 = clickPoints.get(1);
                     Point p3 = clickPoints.get(2);
                     ball.gameStart(p1, p2, p3, panel);
 
                 } else {
-                    errorMsg.setVisible(true);
                     inputPanel.revalidate();
                     inputPanel.repaint();
                 }
@@ -102,23 +108,7 @@ public class MovingBalls extends JFrame implements MouseListener {
 
     }
 
-    private boolean validateInputs() {
-        errorMsg.setVisible(true); // Ensure error message is visible
-        if (clickPoints.size() < 3) {
-            errorMsg.setText("Please select 3 points.");
-
-            inputPanel.repaint();
-            return false;
-        }
-        if (ParabolicCalculator.a < 0) {
-            errorMsg.setText("Please select 3 points which form a downward facing parabola");
-            inputPanel.repaint();
-            return false;
-        } else {
-            return true;
-        }
-    }
-
+   
     @Override
     public void mouseClicked(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)) {
