@@ -1,7 +1,16 @@
 import java.util.ArrayList;
 /**
- * This class takes the startpoint and endpoint of the linear line and take the number 
- *  of points it will print to reach the end. It calculates the center of the circle,radius.Using these key pieces of informatiion, it adds all the points to an arraylist called motionPoints
+ * The CircularCurveCalculator class calculates the points along a circular curve 
+ * given a start point, an end point, and the number of points to generate along the curve. 
+ * It calculates the center and radius of the circle. Using this information, it adds all the 
+ * points to an ArrayList called motionPoints.
+ * 
+ * - generateCurve(): Generates and returns an ArrayList of points along the circular curve.
+ *   - It calculates the center of the circle from the start and end points.
+ *   - It calculates the radius of the circle from the start point, end point, and center.
+ *   - It computes the start and end angles in radians.
+ *   - It calculates the angle increment between each point along the curve.
+ *   - It iterates through the number of points, calculating each point's coordinates and adding it to the ArrayList.
  */
 public class CircularCurveCalculator {
 
@@ -18,25 +27,21 @@ public class CircularCurveCalculator {
     public ArrayList<Point> generateCurve() {
         ArrayList<Point> curvePoints = new ArrayList<>();
 
-        // Calculate the center point of the circle passing through start and end points
         center = calculateCenter(startPoint, endPoint);
 
-        // Calculate the radius of the circle
         double radius = calculateRadius(startPoint, endPoint, center);
 
-        // Calculate the start and end angles of the circular arc
+       
         double startAngle = Math.atan2(startPoint.y - center.y, startPoint.x - center.x);
         double endAngle = Math.atan2(endPoint.y - center.y, endPoint.x - center.x);
 
-        // Adjust angles to ensure the shortest arc is used
         if (startAngle > endAngle) {
             startAngle -= 2 * Math.PI;
         }
 
-        // Calculate the angle increment between points
+       
         double angleIncrement = (endAngle - startAngle) / numPoints;
 
-        // Generate points along the circular path
         for (int i = 0; i < numPoints; i++) {
             double angle = startAngle + i * angleIncrement;
             double x = center.x + radius * Math.cos(angle);
@@ -47,16 +52,14 @@ public class CircularCurveCalculator {
         return curvePoints;
     }
 
-    // Helper method to calculate the center point of the circle
     private Point calculateCenter(Point start, Point end) {
         double centerX = (start.x + end.x) / 2;
         double centerY = (start.y + end.y) / 2;
         return new Point((int)centerX, (int)centerY);
     }
 
-    // Helper method to calculate the radius of the circle
     private double calculateRadius(Point start, Point end, Point center) {
-        // Use the distance formula to calculate the distance between the center and start or end point
+
         double radius = Math.sqrt(Math.pow(center.x - start.x, 2) + Math.pow(center.y - start.y, 2));
         return radius;
     }

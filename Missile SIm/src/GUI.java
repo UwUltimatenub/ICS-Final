@@ -39,21 +39,20 @@ public class GUI extends JFrame implements MouseListener {
         inputPanel.setPreferredSize(new Dimension(frameWidth, 70));
         inputPanel.setLayout(new GridBagLayout());
         inputPanel.setBackground(Color.gray);
-        inputPanel.add(redTextLabel); // Add red text label
+        inputPanel.add(redTextLabel); 
 
-        redTextLabel.setPreferredSize(new Dimension(frameWidth - 20, 70)); // Slightly smaller than panel width
-        redTextLabel.setHorizontalAlignment(SwingConstants.CENTER); // Center the text horizontally
-        redTextLabel.setVerticalAlignment(SwingUtilities.CENTER); // Center the text vertically
-        redTextLabel.setFont(new Font("Serif", Font.PLAIN, 24)); // Make the font larger
-        redTextLabel.setForeground(Color.black); // Make the font larger
+        redTextLabel.setPreferredSize(new Dimension(frameWidth - 20, 70)); 
+        redTextLabel.setHorizontalAlignment(SwingConstants.CENTER); 
+        redTextLabel.setVerticalAlignment(SwingUtilities.CENTER);
+        redTextLabel.setFont(new Font("Serif", Font.PLAIN, 24)); 
+        redTextLabel.setForeground(Color.black); 
         redTextLabel.setBackground(Color.RED); 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding around the label
-        inputPanel.add(redTextLabel); // Add red text label
-
+        gbc.insets = new Insets(10, 10, 10, 10); 
+        inputPanel.add(redTextLabel); 
         this.add(inputPanel, BorderLayout.NORTH);
 
         buttonPanel = new JPanel();

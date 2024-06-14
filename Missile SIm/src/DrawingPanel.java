@@ -48,7 +48,7 @@ public class DrawingPanel extends JPanel {
     private int currentIndex2 = 0;
 
     private Point interceptPoint;
-    private ArrayList<Point> points, circlePositions, linearPositions; // To store clicked points
+    private ArrayList<Point> points, circlePositions, linearPositions; 
     private ArrayList<CalculatedPoints> CalculatedPoints;
 
     private CalculatedPoints lowestYPoint;
@@ -163,7 +163,7 @@ public class DrawingPanel extends JPanel {
             g2d.rotate(angle + Math.toRadians(90), newposition.x, newposition.y);
             g2d.drawImage(rocket, newposition.x - rocketWidth / 2, newposition.y - rocketHeight / 2, null);
             g2d.setTransform(oldTransform);
-            currentIndex2++; // Move to the next point
+            currentIndex2++; 
         }
     }
 
@@ -203,7 +203,7 @@ public class DrawingPanel extends JPanel {
             g2d.setColor(Color.RED);
             g2d.drawImage(interceptionImage, Positioning.x - missileWidth / 2, Positioning.y - missileHeight / 2, null);
             g2d.setTransform(oldTransform);
-            currentIndex++; // Move to the next point
+            currentIndex++; 
             interceptPoint = new Point(circlePositions.get(circlePositions.size() - 1).x,
                     circlePositions.get(circlePositions.size() - 1).y);
         } else if (running) {
@@ -229,10 +229,8 @@ public class DrawingPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
 
-        // Draw the grid
         drawGrid(g2d);
 
-        // Draw the parabolic motion, circular motion, and points
         if (!interceptOccurred) {
             drawParabolicMotion(g2d);
             if (setCircular) {
@@ -241,11 +239,9 @@ public class DrawingPanel extends JPanel {
                 drawLinearMotion(g2d);
             }
         }
-
-        // Draw the red points
+        
         drawPoints(g2d);
 
-        // Draw the explosion if intercept occurred
         if (interceptOccurred) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, explosionAlpha));
             g2d.drawImage(explosionImage, interceptPoint.x - explosionImage.getWidth(this) / 2,
